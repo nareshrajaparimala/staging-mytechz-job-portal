@@ -25,7 +25,7 @@ import MyApplications from './pages/MyApplications';
 import Profile from './pages/Profile';
 import AdminDashboard from './pages/AdminDashboard';
 import UserDashboard from './pages/UserDashboard';
-import RecruiterDashboard from './pages/RecruiterDashboard';
+import RecruiterHome from './components/RecruiterHome';
 import CandidateSearch from './pages/CandidateSearch';
 import SavedProfiles from './pages/SavedProfiles';
 import PostedJobs from './pages/PostedJobs';
@@ -33,6 +33,9 @@ import RecruiterSubscription from './pages/RecruiterSubscription';
 import RecruiterMessages from './pages/RecruiterMessages';
 import CompanyProfile from './pages/CompanyProfile';
 import PostJob from './pages/PostJob';
+import PostInternship from './pages/PostInternship';
+import Reports from './pages/Reports';
+import BuyFeatures from './pages/BuyFeatures';
 import JobApply from './pages/JobApply';
 import NaukriJobDetail from './pages/NaukriJobDetail';
 import RecruiterLayout from './components/Recruiter/RecruiterLayout';
@@ -40,6 +43,7 @@ import ProtectedRoute from './components/ProtectedRoute';
 import NotificationSystem from './components/Notification/NotificationSystem';
 import LoadingPage from './components/LoadingPage/LoadingPage';
 import PopupNotification from './components/PopupNotification/PopupNotification';
+
 function App() {
   const [isLoading, setIsLoading] = useState(true);
   const [notification, setNotification] = useState({ message: '', type: 'success', isVisible: false });
@@ -47,7 +51,7 @@ function App() {
   useEffect(() => {
     const timer = setTimeout(() => {
       setIsLoading(false);
-    }, 3000);
+    }, 1000);
     return () => clearTimeout(timer);
   }, []);
 
@@ -66,6 +70,11 @@ function App() {
       <Navbar /> {/* Navbar component for navigation */}
       <Routes>
         <Route path="/" element={<Home />} />
+        <Route path="/candidate/home" element={
+          <ProtectedRoute requiredRole="user">
+            <Home />
+          </ProtectedRoute>
+        } />
         <Route path="/jobs" element={<NaukriJobs />} />
         <Route path="/jobs/private" element={<NaukriJobs />} />
         <Route path="/jobs/government" element={<GovernmentJobs />} />
@@ -113,19 +122,44 @@ function App() {
         } />
         <Route path="/recruiter" element={
           <ProtectedRoute requiredRole="recruiter">
-            <RecruiterLayout />
+            <BuyFeatures />
           </ProtectedRoute>
-        }>
-          <Route index element={<RecruiterDashboard />} />
-          <Route path="search-candidates" element={<CandidateSearch />} />
-          <Route path="resume-database" element={<CandidateSearch />} />
-          <Route path="saved-profiles" element={<SavedProfiles />} />
-          <Route path="posted-jobs" element={<PostedJobs />} />
-          <Route path="post-job" element={<PostJob />} />
-          <Route path="company-profile" element={<CompanyProfile />} />
-          <Route path="subscription" element={<RecruiterSubscription />} />
-          <Route path="messages" element={<RecruiterMessages />} />
-        </Route>
+        } />
+        <Route path="/recruiter/post-job" element={
+          <ProtectedRoute requiredRole="recruiter">
+            <PostJob />
+          </ProtectedRoute>
+        } />
+        <Route path="/recruiter/resume-database" element={
+          <ProtectedRoute requiredRole="recruiter">
+            <CandidateSearch />
+          </ProtectedRoute>
+        } />
+        <Route path="/recruiter/post-internship" element={
+          <ProtectedRoute requiredRole="recruiter">
+            <PostInternship />
+          </ProtectedRoute>
+        } />
+        <Route path="/recruiter/company-profile" element={
+          <ProtectedRoute requiredRole="recruiter">
+            <CompanyProfile />
+          </ProtectedRoute>
+        } />
+        <Route path="/recruiter/reports" element={
+          <ProtectedRoute requiredRole="recruiter">
+            <Reports />
+          </ProtectedRoute>
+        } />
+        <Route path="/recruiter/buy-features" element={
+          <ProtectedRoute requiredRole="recruiter">
+            <BuyFeatures />
+          </ProtectedRoute>
+        } />
+        <Route path="/recruiter/talent-candidates" element={
+          <ProtectedRoute requiredRole="recruiter">
+            <CandidateSearch />
+          </ProtectedRoute>
+        } />
         <Route path="/settings" element={<div>Settings Page</div>} />
       </Routes>
       <Footer /> {/* Footer component for additional information */}

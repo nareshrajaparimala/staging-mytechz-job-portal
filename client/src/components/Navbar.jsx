@@ -2,6 +2,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ProfileDropdown from './ProfileDropdown';
+import Popup from './Popup';
 import './Navbar.css'; 
 
 function Navbar() {
@@ -16,6 +17,9 @@ function Navbar() {
   
   // Employers dropdown state
   const [employersDropdownOpen, setEmployersDropdownOpen] = useState(false);
+  
+  // Popup state
+  const [popupOpen, setPopupOpen] = useState(false);
   
   // Auth state - reactive to localStorage changes
   const [isLoggedIn, setIsLoggedIn] = useState(false);
@@ -66,10 +70,6 @@ function Navbar() {
     setJobsDropdownOpen(!jobsDropdownOpen);
   };
 
-  const handleEmployersDropdownToggle = () => {
-    setEmployersDropdownOpen(!employersDropdownOpen);
-  };
-
   // Handle link click - close menu immediately and navigate
   const handleLinkClick = (e, path) => {
     e.preventDefault();
@@ -113,6 +113,12 @@ function Navbar() {
     navigate('/login');
   };
 
+  // Handle Resume click
+  const handleResumeClick = (e) => {
+    e.preventDefault();
+    setPopupOpen(true);
+  };
+
   return (
     <nav>
       <div className="logo">
@@ -125,54 +131,71 @@ function Navbar() {
           {/* Mobile dropdown menu */}
           <ul className={`dropdown-content ${mobileMenuOpen ? 'mobile-open' : ''}`}>
             <li className='color-subnav-box hamburger-item home-nav-h'>
-              <button onClick={(e) => handleLinkClick(e, '/')} className="nav-link-btn">Home</button>
+              <button 
+                onClick={(e) => handleLinkClick(e, isLoggedIn && userInfo?.role === 'recruiter' ? '/recruiter' : isLoggedIn && userInfo?.role === 'user' ? '/candidate/home' : '/')} 
+                className="nav-link-btn"
+              >
+                Home
+              </button>
             </li>
             
-            {/* Jobs with submenu */}
-            <li className={`color-subnav-box hamburger-item job-nav-h dropdown-hidden ${jobsDropdownOpen ? 'jobs-open' : ''}`}>
-              <span onClick={handleJobsDropdownToggle} className="nav-link-btn dropbtn-hidden">
-                Jobs
-                <i className={`ri-arrow-${jobsDropdownOpen ? 'up' : 'down'}-s-line`}></i>
-              </span>
-              <ul className={`dropdown-content-hidden ${jobsDropdownOpen ? 'show' : ''}`}>
-                <li className='color-subnav-box'>
-                  <button onClick={(e) => handleLinkClick(e, '/jobs/private')} className="nav-link-btn">Private Jobs</button>
+            {/* Show different menu items based on user role */}
+            {isLoggedIn && userInfo?.role === 'recruiter' ? (
+              <>
+                {/* Recruiter Mobile Menu */}
+                <li className='color-subnav-box hamburger-item'>
+                  <button onClick={(e) => handleLinkClick(e, '/recruiter/post-job')} className="nav-link-btn">Job Post</button>
                 </li>
-                <li className='color-subnav-box'>
-                  <button onClick={(e) => handleLinkClick(e, '/jobs/government')} className="nav-link-btn">Government Jobs</button>
+                <li className='color-subnav-box hamburger-item'>
+                  <button onClick={(e) => handleLinkClick(e, '/recruiter/resume-database')} className="nav-link-btn">Resume Database</button>
                 </li>
-              </ul>
-            </li>
-            
-            <li className='color-subnav-box hamburger-item document-nav-h'>
-              <button onClick={(e) => handleLinkClick(e, '/documents')} className="nav-link-btn">Resume</button>
-            </li>
-            <li className='color-subnav-box hamburger-item admission-nav-h'>
-              <button onClick={(e) => handleLinkClick(e, '/admissions')} className="nav-link-btn">Admissions</button>
-            </li>
-            <li className='color-subnav-box hamburger-item webinar-nav-h'>
-              <button onClick={(e) => handleLinkClick(e, '/webinars')} className="nav-link-btn">Webinars</button>
-            </li>
-            
-            {/* For Employers with submenu - Only show for recruiters */}
-            {isLoggedIn && userInfo?.role === 'recruiter' && (
-              <li className={`color-subnav-box hamburger-item employer-nav-h dropdown-hidden ${employersDropdownOpen ? 'employers-open' : ''}`}>
-                <span onClick={handleEmployersDropdownToggle} className="nav-link-btn dropbtn-hidden">
-                  For Employers
-                  <i className={`ri-arrow-${employersDropdownOpen ? 'up' : 'down'}-s-line`}></i>
-                </span>
-                <ul className={`dropdown-content-hidden ${employersDropdownOpen ? 'show' : ''}`}>
-                  <li className='color-subnav-box'>
-                    <button onClick={(e) => handleLinkClick(e, '/recruiter/subscription')} className="nav-link-btn">Buy Online</button>
-                  </li>
-                  <li className='color-subnav-box'>
-                    <button onClick={(e) => handleLinkClick(e, '/recruiter/resume-database')} className="nav-link-btn">Talent Cloud</button>
-                  </li>
-                  <li className='color-subnav-box'>
-                    <button onClick={(e) => handleLinkClick(e, '/recruiter')} className="nav-link-btn">Employer Dashboard</button>
-                  </li>
-                </ul>
-              </li>
+                <li className='color-subnav-box hamburger-item'>
+                  <button onClick={(e) => handleLinkClick(e, '/recruiter/post-internship')} className="nav-link-btn">Internship Post</button>
+                </li>
+                <li className='color-subnav-box hamburger-item'>
+                  <button onClick={(e) => handleLinkClick(e, '/recruiter/reports')} className="nav-link-btn">Get Report</button>
+                </li>
+                <li className='color-subnav-box hamburger-item'>
+                  <button onClick={(e) => handleLinkClick(e, '/recruiter/buy-features')} className="nav-link-btn">Buy Features</button>
+                </li>
+                <li className='color-subnav-box hamburger-item'>
+                  <button onClick={(e) => handleLinkClick(e, '/recruiter/talent-candidates')} className="nav-link-btn">Talent Candidates</button>
+                </li>
+              </>
+            ) : (
+              <>
+                {/* Regular User Mobile Menu */}
+                {/* Jobs with submenu */}
+                <li className={`color-subnav-box hamburger-item job-nav-h dropdown-hidden ${jobsDropdownOpen ? 'jobs-open' : ''}`}>
+                  <span onClick={handleJobsDropdownToggle} className="nav-link-btn dropbtn-hidden">
+                    Jobs
+                    <i className={`ri-arrow-${jobsDropdownOpen ? 'up' : 'down'}-s-line`}></i>
+                  </span>
+                  <ul className={`dropdown-content-hidden ${jobsDropdownOpen ? 'show' : ''}`}>
+                    <li className='color-subnav-box'>
+                      <button onClick={(e) => handleLinkClick(e, '/jobs/private')} className="nav-link-btn">Private Jobs</button>
+                    </li>
+                    <li className='color-subnav-box'>
+                      <button onClick={(e) => handleLinkClick(e, '/jobs/government')} className="nav-link-btn">Government Jobs</button>
+                    </li>
+                  </ul>
+                </li>
+                
+                <li className='color-subnav-box hamburger-item document-nav-h'>
+                  <button 
+                    onClick={handleResumeClick}
+                    className="nav-link-btn"
+                  >
+                    Resume
+                  </button>
+                </li>
+                <li className='color-subnav-box hamburger-item admission-nav-h'>
+                  <button onClick={(e) => handleLinkClick(e, '/admissions')} className="nav-link-btn">Admissions</button>
+                </li>
+                <li className='color-subnav-box hamburger-item webinar-nav-h'>
+                  <button onClick={(e) => handleLinkClick(e, '/webinars')} className="nav-link-btn">Webinars</button>
+                </li>
+              </>
             )}
             
             {/* Show login only when NOT logged in */}
@@ -196,49 +219,73 @@ function Navbar() {
 
       {/* Desktop navigation */}
       <ul className="sector2">
-        <li className={`color-nav-box home-nav ${location.pathname === '/' ? 'active' : ''}`}>
-          <Link to="/">Home</Link>
+        <li className={`color-nav-box home-nav ${(location.pathname === '/' || (isLoggedIn && userInfo?.role === 'recruiter' && location.pathname === '/recruiter') || (isLoggedIn && userInfo?.role === 'user' && location.pathname === '/candidate/home')) ? 'active' : ''}`}>
+          <Link to={isLoggedIn && userInfo?.role === 'recruiter' ? '/recruiter' : isLoggedIn && userInfo?.role === 'user' ? '/candidate/home' : '/'}>Home</Link>
         </li>
         
-        {/* Jobs with dropdown */}
-        <li className={`color-nav-box job-nav dropdown ${location.pathname.startsWith('/jobs') ? 'active' : ''}`}>
-          <Link to="/jobs">Jobs</Link>
-          <ul className="dropdown-content jobs-dropdown">
-            <li>
-              <Link to="/jobs/private">Private Jobs</Link>
+        {/* Show different nav items based on user role */}
+        {isLoggedIn && userInfo?.role === 'recruiter' ? (
+          <>
+            {/* Recruiter Navigation */}
+            <li className={`color-nav-box ${location.pathname === '/recruiter/post-job' ? 'active' : ''}`}>
+              <Link to="/recruiter/post-job">Job Post</Link>
             </li>
-            <li>
-              <Link to="/jobs/government">Government Jobs</Link>
+            <li className={`color-nav-box ${location.pathname === '/recruiter/resume-database' ? 'active' : ''}`}>
+              <Link to="/recruiter/resume-database">Resume Database</Link>
             </li>
-          </ul>
-        </li>
-        
-        <li className={`color-nav-box document-nav ${location.pathname === '/documents' ? 'active' : ''}`}>
-          <Link to="/documents">Resume</Link>
-        </li>
-        <li className={`color-nav-box admission-nav ${location.pathname.startsWith('/admissions') ? 'active' : ''}`}>
-          <Link to="/admissions">Admissions</Link>
-        </li>
-        <li className={`color-nav-box webinar-nav ${location.pathname === '/webinars' ? 'active' : ''}`}>
-          <Link to="/webinars">Webinars</Link>
-        </li>
-        
-        {/* For Employers dropdown - Only show for recruiters */}
-        {isLoggedIn && userInfo?.role === 'recruiter' && (
-          <li className={`color-nav-box employer-nav dropdown ${location.pathname.startsWith('/recruiter') ? 'active' : ''}`}>
-            <Link to="/recruiter">For Employers</Link>
-            <ul className="dropdown-content employer-dropdown">
-              <li>
-                <Link to="/recruiter/subscription">Buy Online</Link>
-              </li>
-              <li>
-                <Link to="/recruiter/resume-database">Talent Cloud</Link>
-              </li>
-              <li>
-                <Link to="/recruiter">Employer Dashboard</Link>
-              </li>
-            </ul>
-          </li>
+            <li className={`color-nav-box ${location.pathname === '/recruiter/post-internship' ? 'active' : ''}`}>
+              <Link to="/recruiter/post-internship">Internship Post</Link>
+            </li>
+            <li className={`color-nav-box ${location.pathname === '/recruiter/reports' ? 'active' : ''}`}>
+              <Link to="/recruiter/reports">Get Report</Link>
+            </li>
+            
+            {/* Employers dropdown */}
+            <li className={`color-nav-box employer-nav dropdown ${location.pathname.startsWith('/recruiter/employers') ? 'active' : ''}`}>
+              <span className="employer-link">
+                Employers <i className="ri-arrow-down-s-line"></i>
+              </span>
+              <ul className="employer-dropdown">
+                <li>
+                  <Link to="/recruiter/buy-features">Buy Features</Link>
+                </li>
+                <li>
+                  <Link to="/recruiter/talent-candidates">Talent Candidates</Link>
+                </li>
+              </ul>
+            </li>
+          </>
+        ) : (
+          <>
+            {/* Regular User Navigation */}
+            {/* Jobs with dropdown */}
+            <li className={`color-nav-box job-nav dropdown ${location.pathname.startsWith('/jobs') ? 'active' : ''}`}>
+              <Link to="/jobs">Jobs</Link>
+              <ul className="dropdown-content jobs-dropdown">
+                <li>
+                  <Link to="/jobs/private">Private Jobs</Link>
+                </li>
+                <li>
+                  <Link to="/jobs/government">Government Jobs</Link>
+                </li>
+              </ul>
+            </li>
+            
+            <li className={`color-nav-box document-nav ${location.pathname === '/documents' ? 'active' : ''}`}>
+              <span 
+                onClick={handleResumeClick}
+                style={{ cursor: 'pointer' }}
+              >
+                Resume
+              </span>
+            </li>
+            <li className={`color-nav-box admission-nav ${location.pathname.startsWith('/admissions') ? 'active' : ''}`}>
+              <Link to="/admissions">Admissions</Link>
+            </li>
+            <li className={`color-nav-box webinar-nav ${location.pathname === '/webinars' ? 'active' : ''}`}>
+              <Link to="/webinars">Webinars</Link>
+            </li>
+          </>
         )}
       </ul>
       
@@ -253,11 +300,20 @@ function Navbar() {
             />
           ) : (
             <Link to="/login" className="login-img">
-              <i className="ri-user-line"></i>
+              <img src="../assets/photo.webp" alt="Login" className="login-icon-img" />
             </Link>
           )}
         </div>
       </div>
+      
+      {/* Resume Feature Popup */}
+      <Popup
+        isOpen={popupOpen}
+        onClose={() => setPopupOpen(false)}
+        title="Resume AI Analyzer"
+        message="Our advanced Resume AI Analyzer feature is coming soon! Get ready for ATS score analysis, keyword optimization, and industry-specific tips to make your resume stand out. 🚀"
+        type="info"
+      />
     </nav>
   );
 }

@@ -1,7 +1,9 @@
 import React, { useState } from 'react';
+import Popup from '../Popup';
 import './ResumeTemplates.css';
 
 function ResumeTemplates({ onTemplateSelect }) {
+  const [popupOpen, setPopupOpen] = useState(false);
   const [templates] = useState([
     {
       _id: '1',
@@ -32,11 +34,46 @@ function ResumeTemplates({ onTemplateSelect }) {
     }
   ]);
 
+  const handleTemplateClick = (template) => {
+    setPopupOpen(true);
+  };
+
   return (
     <div className="resume-templates-container">
       <div className="templates-header">
         <h1>Professional Resume Templates</h1>
         <p>Choose from our collection of professionally designed resume templates</p>
+      </div>
+
+      {/* AI Analyzer Coming Soon Section */}
+      <div className="ai-analyzer-banner">
+        <div className="ai-banner-content">
+          <div className="ai-banner-icon">
+            <i className="ri-robot-line"></i>
+          </div>
+          <div className="ai-banner-text">
+            <h2>Resume AI Analyzer</h2>
+            <p>Get instant feedback on your resume with our AI-powered analyzer. Coming Soon!</p>
+            <div className="coming-soon-badge">
+              <i className="ri-time-line"></i>
+              <span>Feature Coming Soon</span>
+            </div>
+          </div>
+          <div className="ai-banner-features">
+            <div className="ai-feature">
+              <i className="ri-check-line"></i>
+              <span>ATS Score Analysis</span>
+            </div>
+            <div className="ai-feature">
+              <i className="ri-check-line"></i>
+              <span>Keyword Optimization</span>
+            </div>
+            <div className="ai-feature">
+              <i className="ri-check-line"></i>
+              <span>Industry-Specific Tips</span>
+            </div>
+          </div>
+        </div>
       </div>
 
       <div className="templates-grid">
@@ -47,7 +84,7 @@ function ResumeTemplates({ onTemplateSelect }) {
               <div className="template-overlay">
                 <button 
                   className="preview-btn"
-                  onClick={() => onTemplateSelect(template)}
+                  onClick={() => handleTemplateClick(template)}
                 >
                   Preview & Select
                 </button>
@@ -77,7 +114,7 @@ function ResumeTemplates({ onTemplateSelect }) {
               
               <button 
                 className="select-template-btn"
-                onClick={() => onTemplateSelect(template)}
+                onClick={() => handleTemplateClick(template)}
               >
                 Select Template
               </button>
@@ -104,6 +141,15 @@ function ResumeTemplates({ onTemplateSelect }) {
           <p>Templates designed for different industries and career levels</p>
         </div>
       </div>
+      
+      {/* Resume Feature Popup */}
+      <Popup
+        isOpen={popupOpen}
+        onClose={() => setPopupOpen(false)}
+        title="Resume AI Analyzer"
+        message="Our advanced Resume AI Analyzer feature is coming soon! Get ready for ATS score analysis, keyword optimization, and industry-specific tips to make your resume stand out. 🚀"
+        type="info"
+      />
     </div>
   );
 }

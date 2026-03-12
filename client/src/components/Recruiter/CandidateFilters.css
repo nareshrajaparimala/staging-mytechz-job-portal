@@ -1,12 +1,11 @@
-/* Candidate Filters Styles */
+/* Candidate Filters Styles - Horizontal Layout */
 .candidate-filters {
   background: var(--bg-surface, var(--bg-page));
   border: 1px solid var(--border-subtle);
   border-radius: 12px;
   padding: 20px;
-  height: fit-content;
-  position: sticky;
-  top: 20px;
+  margin-bottom: 20px;
+  width: 100%;
 }
 
 .filters-header {
@@ -45,7 +44,19 @@
   border-color: var(--danger);
 }
 
-/* Filter Groups */
+/* Filter Groups - Horizontal Grid */
+.candidate-filters > .filter-group:not(.filter-group:has(.popular-skills)) {
+  display: inline-block;
+  width: calc(25% - 15px);
+  margin-right: 20px;
+  margin-bottom: 20px;
+  vertical-align: top;
+}
+
+.candidate-filters > .filter-group:nth-child(4n+1) {
+  margin-right: 0;
+}
+
 .filter-group {
   margin-bottom: 20px;
 }
@@ -148,7 +159,13 @@
   background: rgba(255, 255, 255, 0.2);
 }
 
-/* Popular Skills */
+/* Popular Skills - Full Width */
+.filter-group:has(.popular-skills) {
+  width: 100%;
+  display: block;
+  margin-right: 0;
+}
+
 .popular-skills {
   margin-top: 12px;
 }
@@ -162,17 +179,17 @@
 
 .skills-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
-  gap: 6px;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 8px;
 }
 
 .skill-suggestion {
-  padding: 6px 8px;
+  padding: 8px 12px;
   border: 1px solid var(--border-subtle);
   border-radius: 6px;
   background: var(--bg-page);
   color: var(--text-main);
-  font-size: 0.8rem;
+  font-size: 0.85rem;
   cursor: pointer;
   transition: all 0.2s ease;
   text-align: center;
@@ -197,7 +214,7 @@
 
 /* Active Filters Count */
 .active-filters-count {
-  display: flex;
+  display: inline-flex;
   align-items: center;
   gap: 8px;
   padding: 10px 12px;
@@ -206,7 +223,7 @@
   border-radius: 6px;
   font-size: 0.85rem;
   font-weight: 500;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
 .active-filters-count i {
@@ -214,16 +231,35 @@
 }
 
 /* Responsive Design */
-@media (max-width: 1024px) {
-  .candidate-filters {
-    position: static;
-    margin-bottom: 20px;
+@media (max-width: 1200px) {
+  .candidate-filters > .filter-group:not(.filter-group:has(.popular-skills)) {
+    width: calc(33.333% - 14px);
+  }
+  
+  .candidate-filters > .filter-group:nth-child(4n+1) {
+    margin-right: 20px;
+  }
+  
+  .candidate-filters > .filter-group:nth-child(3n+1) {
+    margin-right: 0;
   }
 }
 
 @media (max-width: 768px) {
   .candidate-filters {
     padding: 16px;
+  }
+  
+  .candidate-filters > .filter-group:not(.filter-group:has(.popular-skills)) {
+    width: calc(50% - 10px);
+  }
+  
+  .candidate-filters > .filter-group:nth-child(3n+1) {
+    margin-right: 20px;
+  }
+  
+  .candidate-filters > .filter-group:nth-child(2n+1) {
+    margin-right: 0;
   }
   
   .filters-header {
@@ -237,12 +273,23 @@
   }
   
   .skills-grid {
-    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(80px, 1fr));
   }
   
   .skill-suggestion {
-    font-size: 0.75rem;
-    padding: 4px 6px;
+    font-size: 0.8rem;
+    padding: 6px 8px;
+  }
+}
+
+@media (max-width: 480px) {
+  .candidate-filters > .filter-group:not(.filter-group:has(.popular-skills)) {
+    width: 100%;
+    margin-right: 0;
+  }
+  
+  .skills-grid {
+    grid-template-columns: repeat(auto-fit, minmax(70px, 1fr));
   }
 }
 

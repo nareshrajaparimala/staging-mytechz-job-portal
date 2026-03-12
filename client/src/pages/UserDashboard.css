@@ -1027,7 +1027,7 @@
 }
 
 .step-title {
-  font-size: 0.85rem;
+  font-size: 14px;
   color: var(--text-muted);
   font-weight: 500;
   text-align: center;
@@ -1064,25 +1064,26 @@
 .form-group {
   display: flex;
   flex-direction: column;
-  gap: 6px;
+  gap: 8px;
+  margin-bottom: 24px;
 }
 
 .form-group label {
-  font-size: 0.9rem;
-  font-weight: 500;
+  font-size: 16px;
+  font-weight: 600;
   color: var(--text-main);
 }
 
 .form-group input,
 .form-group select,
 .form-group textarea {
-  padding: 10px 12px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
+  padding: 12px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
   background: var(--bg-page);
   color: var(--text-main);
-  font-size: 0.9rem;
-  transition: border-color 0.2s ease;
+  font-size: 15px;
+  transition: all 0.2s ease;
 }
 
 .form-group input:focus,
@@ -1090,6 +1091,13 @@
 .form-group textarea:focus {
   outline: none;
   border-color: var(--accent);
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1);
+}
+
+.form-group input::placeholder,
+.form-group textarea::placeholder {
+  color: #9ca3af;
+  font-size: 15px;
 }
 
 .form-group textarea {
@@ -2358,4 +2366,275 @@
     width: 100%;
     justify-content: flex-start;
   }
+}
+
+
+/* Enhanced Form Styling - Naukri-Style Large Font Sizes */
+/* Naukri-style Form Styling - Consistent 16px Font Sizes */
+.post-job-container .form-group label,
+.post-job-container .salary-section h3,
+.post-job-container .array-input-section h3 {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  color: #1a1a1a !important;
+  margin-bottom: 8px !important;
+}
+
+.post-job-container .form-group input,
+.post-job-container .form-group select,
+.post-job-container .form-group textarea,
+.post-job-container .input-with-button input {
+  padding: 12px 14px !important;
+  border: 1px solid #d1d5db !important;
+  border-radius: 6px !important;
+  background: #ffffff !important;
+  color: #1a1a1a !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+  line-height: 1.5 !important;
+  transition: all 0.2s ease !important;
+}
+
+.post-job-container .form-group input:focus,
+.post-job-container .form-group select:focus,
+.post-job-container .form-group textarea:focus,
+.post-job-container .input-with-button input:focus {
+  outline: none !important;
+  border-color: #667eea !important;
+  box-shadow: 0 0 0 3px rgba(102, 126, 234, 0.1) !important;
+}
+
+.post-job-container .form-group input::placeholder,
+.post-job-container .form-group textarea::placeholder,
+.post-job-container .input-with-button input::placeholder {
+  color: #9ca3af !important;
+  font-size: 16px !important;
+  font-weight: 400 !important;
+}
+
+.post-job-container .step-content h2 {
+  font-size: 20px !important;
+  font-weight: 600 !important;
+  color: #1a1a1a !important;
+  margin-bottom: 24px !important;
+}
+
+/* Section Headings - Naukri Style */
+.wizard-step h2,
+.form-section h2,
+.dashboard-section h2,
+.step-content h2 {
+  font-size: 26px !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  margin-bottom: 28px !important;
+  letter-spacing: 0.3px !important;
+}
+
+.wizard-step h3,
+.form-section h3,
+.step-content h3,
+.salary-section h3,
+.array-input-section h3 {
+  font-size: 20px !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  margin-bottom: 20px !important;
+  letter-spacing: 0.2px !important;
+}
+
+/* Button Styling - Naukri Style */
+.wizard-buttons button,
+.form-actions button,
+.btn-primary,
+.btn-secondary {
+  font-size: 17px !important;
+  font-weight: 600 !important;
+  padding: 14px 28px !important;
+  border-radius: 8px !important;
+  letter-spacing: 0.3px !important;
+}
+
+/* Array Input Items */
+.array-item,
+.skill-tag,
+.benefit-tag,
+.item-chip {
+  font-size: 16px !important;
+  font-weight: 500 !important;
+  padding: 8px 14px !important;
+}
+
+/* Radio and Checkbox Labels */
+.radio-option span,
+.checkbox-option span {
+  font-size: 17px !important;
+  font-weight: 500 !important;
+  color: #1a1a1a !important;
+}
+
+/* Dark Mode Overrides for Post Job/Internship */
+:root.dark .post-job-container .form-group label {
+  color: #f7fafc !important;
+}
+
+:root.dark .post-job-container .form-group input,
+:root.dark .post-job-container .form-group select,
+:root.dark .post-job-container .form-group textarea {
+  background: #2d3748 !important;
+  color: #f7fafc !important;
+  border-color: #4a5568 !important;
+}
+
+:root.dark .post-job-container .form-group input::placeholder,
+:root.dark .post-job-container .form-group textarea::placeholder {
+  color: #a0aec0 !important;
+}
+
+:root.dark .post-job-container .step-content h2,
+:root.dark .post-job-container .step-content h3,
+:root.dark .post-job-container .salary-section h3,
+:root.dark .post-job-container .array-input-section h3 {
+  color: #f7fafc !important;
+}
+
+:root.dark .post-job-container .radio-option span,
+:root.dark .post-job-container .checkbox-option span {
+  color: #f7fafc !important;
+}
+
+/* Company Profile Page - Larger Font Sizes */
+.company-profile-form .form-group label {
+  font-size: 18px !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  margin-bottom: 10px !important;
+}
+
+.company-profile-form .form-group input,
+.company-profile-form .form-group select,
+.company-profile-form .form-group textarea {
+  font-size: 17px !important;
+  font-weight: 500 !important;
+  padding: 16px 18px !important;
+  border: 2px solid #d1d5db !important;
+  line-height: 1.5 !important;
+}
+
+.company-profile-form .form-group input::placeholder,
+.company-profile-form .form-group textarea::placeholder {
+  font-size: 16px !important;
+  font-weight: 400 !important;
+}
+
+.company-profile-form .status-bars h2 {
+  font-size: 26px !important;
+  font-weight: 700 !important;
+  color: #1a1a1a !important;
+  margin-bottom: 28px !important;
+}
+
+.company-profile-form .benefits-input input {
+  font-size: 17px !important;
+  padding: 14px 16px !important;
+}
+
+.company-profile-form .benefit-tag {
+  font-size: 16px !important;
+  padding: 8px 14px !important;
+  font-weight: 500 !important;
+}
+
+.company-profile-form .error-message {
+  font-size: 15px !important;
+  color: #dc2626 !important;
+  margin-top: 6px !important;
+  display: block !important;
+}
+
+/* Benefits input styling */
+.benefits-input {
+  display: flex !important;
+  gap: 10px !important;
+  margin-bottom: 12px !important;
+}
+
+.benefits-input input {
+  flex: 1 !important;
+}
+
+.benefits-list {
+  display: flex !important;
+  flex-wrap: wrap !important;
+  gap: 10px !important;
+  margin-top: 12px !important;
+}
+
+.benefit-tag {
+  display: inline-flex !important;
+  align-items: center !important;
+  gap: 8px !important;
+  background: #e0e7ff !important;
+  color: #3730a3 !important;
+  border-radius: 20px !important;
+  cursor: default !important;
+}
+
+.benefit-tag i {
+  cursor: pointer !important;
+  font-size: 18px !important;
+  transition: color 0.2s !important;
+}
+
+.benefit-tag i:hover {
+  color: #dc2626 !important;
+}
+
+/* Company Profile Header Fixes */
+.company-profile-form ~ .dashboard-header .header-actions,
+.user-dashboard .dashboard-header .header-actions {
+  display: flex !important;
+  gap: 1rem !important;
+  align-items: center !important;
+  flex-wrap: wrap !important;
+}
+
+.user-dashboard .dashboard-header .stat-item {
+  background: rgba(255, 255, 255, 0.15) !important;
+  backdrop-filter: blur(10px) !important;
+}
+
+.user-dashboard .dashboard-header .stat-number,
+.user-dashboard .dashboard-header .stat-label {
+  color: white !important;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1) !important;
+}
+
+.user-dashboard .dashboard-header .btn-primary,
+.user-dashboard .dashboard-header .btn-secondary {
+  font-size: 16px !important;
+  font-weight: 600 !important;
+  padding: 12px 20px !important;
+  white-space: nowrap !important;
+}
+
+.user-dashboard .dashboard-header .btn-primary {
+  background: white !important;
+  color: #667eea !important;
+  border: 2px solid white !important;
+}
+
+.user-dashboard .dashboard-header .btn-primary:hover {
+  background: rgba(255, 255, 255, 0.9) !important;
+  transform: translateY(-2px) !important;
+}
+
+.user-dashboard .dashboard-header .btn-secondary {
+  background: transparent !important;
+  color: white !important;
+  border: 2px solid white !important;
+}
+
+.user-dashboard .dashboard-header .btn-secondary:hover {
+  background: rgba(255, 255, 255, 0.15) !important;
 }

@@ -1,0 +1,320 @@
+═══════════════════════════════════════════════════════════════
+🎨 VISUAL REFERENCE GUIDE 🎨
+═══════════════════════════════════════════════════════════════
+
+This guide shows what you should see when testing each feature.
+
+═══════════════════════════════════════════════════════════════
+1. NAVBAR - DESKTOP VIEW (ALL USERS)
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│  [Logo]    Home  Jobs  Resume  Admissions  Webinars    [👤] │
+└─────────────────────────────────────────────────────────────┘
+
+When hovering over "Jobs":
+┌─────────────────────────────────────────────────────────────┐
+│  [Logo]    Home  Jobs▼ Resume  Admissions  Webinars   [👤] │
+│                   ┌──────────────┐                           │
+│                   │ Private Jobs │                           │
+│                   │ Government   │                           │
+│                   │ Jobs         │                           │
+│                   └──────────────┘                           │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+2. NAVBAR - DESKTOP VIEW (RECRUITER LOGGED IN)
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────────────────────────────┐
+│  [Logo]  Home Jobs Resume Admissions Webinars For Employers [👤] │
+└─────────────────────────────────────────────────────────────┘
+
+When hovering over "For Employers":
+┌─────────────────────────────────────────────────────────────┐
+│  [Logo]  Home Jobs Resume Admissions Webinars For Employers▼[👤]│
+│                                            ┌──────────────────┐│
+│                                            │ Buy Online       ││
+│                                            │ Talent Cloud     ││
+│                                            │ Employer         ││
+│                                            │ Dashboard        ││
+│                                            └──────────────────┘│
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+3. NAVBAR - MOBILE VIEW (MENU CLOSED)
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────┐
+│  [☰]  [Logo]              [👤]      │
+└─────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+4. NAVBAR - MOBILE VIEW (MENU OPEN - ALL USERS)
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────┐
+│  [☰]  [Logo]              [👤]      │ ← Hamburger rotated 90°
+├─────────────────────────────────────┤
+│  Home                               │
+│  Jobs                          ▼    │ ← Click to expand
+│  Resume                             │
+│  Admissions                         │
+│  Webinars                           │
+└─────────────────────────────────────┘
+        ↑ Backdrop blur effect
+
+When "Jobs" is clicked:
+┌─────────────────────────────────────┐
+│  [☰]  [Logo]              [👤]      │
+├─────────────────────────────────────┤
+│  Home                               │
+│  Jobs                          ▲    │ ← Arrow rotated 180°
+│    → Private Jobs                   │ ← Indented submenu
+│    → Government Jobs                │
+│  Resume                             │
+│  Admissions                         │
+│  Webinars                           │
+└─────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+5. NAVBAR - MOBILE VIEW (RECRUITER LOGGED IN)
+═══════════════════════════════════════════════════════════════
+
+┌─────────────────────────────────────┐
+│  [☰]  [Logo]              [👤]      │
+├─────────────────────────────────────┤
+│  Home                               │
+│  Jobs                          ▼    │
+│  Resume                             │
+│  Admissions                         │
+│  Webinars                           │
+│  For Employers                 ▼    │ ← Only for recruiters
+└─────────────────────────────────────┘
+
+When "For Employers" is clicked:
+┌─────────────────────────────────────┐
+│  [☰]  [Logo]              [👤]      │
+├─────────────────────────────────────┤
+│  Home                               │
+│  Jobs                          ▼    │
+│  Resume                             │
+│  Admissions                         │
+│  Webinars                           │
+│  For Employers                 ▲    │ ← Arrow rotated
+│    → Buy Online                     │ ← Submenu items
+│    → Talent Cloud                   │
+│    → Employer Dashboard             │
+└─────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+6. WHATSAPP FLOATING BUTTON
+═══════════════════════════════════════════════════════════════
+
+Desktop View:
+┌─────────────────────────────────────┐
+│                                     │
+│                                     │
+│                                     │
+│                                     │
+│                                     │
+│                                     │
+│                              [💬]   │ ← Green circle
+│                                     │   60px diameter
+└─────────────────────────────────────┘   Pulse animation
+                                          Bottom-right corner
+
+Mobile View:
+┌─────────────────────────┐
+│                         │
+│                         │
+│                         │
+│                         │
+│                         │
+│                  [💬]   │ ← 50-60px
+│                         │   Responsive
+└─────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+7. GOVERNMENT JOBS - COMING SOON PAGE
+═══════════════════════════════════════════════════════════════
+
+When clicking "Government Jobs":
+
+┌─────────────────────────────────────────────────────────────┐
+│                                                               │
+│                    🏛️ Government Jobs                        │
+│                                                               │
+│                      Coming Soon!                             │
+│                                                               │
+│  We're working hard to bring you the best government job     │
+│  opportunities. Stay tuned!                                   │
+│                                                               │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │ 📋 Latest    │  │ 🎯 Exam      │  │ 📚 Study     │      │
+│  │ Notifications│  │ Preparation  │  │ Materials    │      │
+│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│                                                               │
+│  ┌──────────────┐  ┌──────────────┐  ┌──────────────┐      │
+│  │ 📅 Exam      │  │ 💼 Job       │  │ 🔔 Alerts    │      │
+│  │ Calendar     │  │ Alerts       │  │ & Updates    │      │
+│  └──────────────┘  └──────────────┘  └──────────────┘      │
+│                                                               │
+│              [← Back to Jobs]                                 │
+│                                                               │
+└─────────────────────────────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════
+8. ANIMATION BEHAVIORS
+═══════════════════════════════════════════════════════════════
+
+HAMBURGER MENU ANIMATION:
+┌─────────────────────────────────────┐
+│  [☰]  [Logo]              [👤]      │
+└─────────────────────────────────────┘
+         ↓ Click (0.3s smooth slide)
+┌─────────────────────────────────────┐
+│  [☰]  [Logo]              [👤]      │ ← Icon rotates 90°
+├─────────────────────────────────────┤
+│  Menu slides down from top          │
+│  with cubic-bezier easing           │
+│  Backdrop blur appears              │
+└─────────────────────────────────────┘
+
+DROPDOWN ARROW ROTATION:
+Jobs ▼  →  Click  →  Jobs ▲
+(0°)                    (180°)
+     ↑ 0.3s smooth rotation ↑
+
+HOVER EFFECTS (Desktop):
+Home  →  Hover  →  Home
+                   ─────  ← Underline appears
+                   Blue background gradient
+
+═══════════════════════════════════════════════════════════════
+9. COLOR SCHEME
+═══════════════════════════════════════════════════════════════
+
+PRIMARY COLORS:
+- Blue: #4A90E2 (buttons, links, active states)
+- Dark Blue: #357ABD (hover states)
+- Green: #25D366 (WhatsApp button)
+
+NAVBAR:
+- Background: White (light mode) / #0f1115 (dark mode)
+- Text: #333 (light mode) / #E6E9F2 (dark mode)
+- Border: #e5e7eb (light mode) / rgba(91, 124, 250, 0.2) (dark)
+
+DROPDOWNS:
+- Background: White (light mode) / #161B2E (dark mode)
+- Hover: rgba(74, 144, 226, 0.08)
+- Border: #e1e5e9 (light mode) / #1F2655 (dark mode)
+
+WHATSAPP BUTTON:
+- Background: linear-gradient(135deg, #25D366 0%, #128C7E 100%)
+- Hover: Slightly darker green
+- Shadow: 0 4px 12px rgba(37, 211, 102, 0.3)
+
+═══════════════════════════════════════════════════════════════
+10. RESPONSIVE BREAKPOINTS
+═══════════════════════════════════════════════════════════════
+
+DESKTOP (> 1024px):
+- All nav items visible in center
+- Dropdowns on hover
+- Full-size logo (140px width)
+- Profile icon (40px)
+
+TABLET (768px - 1024px):
+- Some items move to hamburger
+- Remaining items centered
+- Hamburger icon visible
+- Smooth transitions
+
+MOBILE (< 767px):
+- Only hamburger, logo, profile visible
+- All nav items in hamburger menu
+- Logo scaled (180px width)
+- Touch-optimized buttons
+- Full-screen dropdown menu
+
+═══════════════════════════════════════════════════════════════
+11. EXPECTED USER FLOWS
+═══════════════════════════════════════════════════════════════
+
+FLOW 1: Job Seeker Browsing Jobs
+1. Visit homepage
+2. See navbar: Home | Jobs | Resume | Admissions | Webinars
+3. Hover over "Jobs"
+4. See dropdown: Private Jobs, Government Jobs
+5. Click "Private Jobs" → Go to jobs listing
+6. Click "Government Jobs" → See "Coming Soon" page
+
+FLOW 2: Recruiter Accessing Dashboard
+1. Go to login page
+2. Select "Recruiter" role
+3. Enter credentials and login
+4. See navbar with "For Employers" added
+5. Hover over "For Employers"
+6. See dropdown: Buy Online, Talent Cloud, Employer Dashboard
+7. Click "Employer Dashboard" → Go to recruiter dashboard
+
+FLOW 3: Mobile User Navigation
+1. Visit on mobile device
+2. See hamburger menu icon
+3. Click hamburger → Menu slides down smoothly
+4. Icon rotates 90°
+5. Click "Jobs" → Submenu expands with arrow rotation
+6. Click "Private Jobs" → Navigate to jobs page
+7. Menu closes automatically
+
+FLOW 4: WhatsApp Contact
+1. Browse any page
+2. See green WhatsApp button at bottom-right
+3. Button pulses to attract attention
+4. Click button
+5. WhatsApp opens with pre-filled message
+6. Phone number: +91 8618659319
+
+═══════════════════════════════════════════════════════════════
+12. TESTING SCENARIOS
+═══════════════════════════════════════════════════════════════
+
+SCENARIO 1: Verify Role-Based Visibility
+✓ Login as Job Seeker → "For Employers" NOT visible
+✓ Login as Recruiter → "For Employers" IS visible
+✓ Login as Admin → "For Employers" NOT visible
+✓ Not logged in → "For Employers" NOT visible
+
+SCENARIO 2: Test Dropdown Interactions
+✓ Desktop: Hover shows dropdown
+✓ Desktop: Move mouse away, dropdown hides
+✓ Mobile: Click shows dropdown
+✓ Mobile: Click again, dropdown hides
+✓ Mobile: Arrow rotates correctly
+
+SCENARIO 3: Test Navigation
+✓ Click "Private Jobs" → Goes to /jobs/private
+✓ Click "Government Jobs" → Goes to /jobs/government
+✓ Click "Buy Online" → Goes to /recruiter/subscription
+✓ Click "Talent Cloud" → Goes to /recruiter/resume-database
+✓ Click "Employer Dashboard" → Goes to /recruiter
+
+SCENARIO 4: Test Animations
+✓ Hamburger menu slides smoothly
+✓ Icon rotates 90° when opening
+✓ Backdrop blur appears
+✓ Arrow rotates 180° in dropdowns
+✓ All transitions are smooth (0.3s)
+
+SCENARIO 5: Test Responsiveness
+✓ Desktop: All items visible, hover works
+✓ Tablet: Some items in hamburger, layout adapts
+✓ Mobile: All items in hamburger, touch-friendly
+✓ Resize window: Layout adapts smoothly
+
+═══════════════════════════════════════════════════════════════
+
+🎨 USE THIS GUIDE WHILE TESTING TO VERIFY EVERYTHING LOOKS RIGHT!
+
+═══════════════════════════════════════════════════════════════

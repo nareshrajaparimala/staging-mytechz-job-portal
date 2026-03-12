@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import CandidateCard from '../components/Recruiter/CandidateCard';
 import CandidateFilters from '../components/Recruiter/CandidateFilters';
-import '../components/Jobs/JobListing.css'; // Using existing jobs listing styles
+import './CandidateSearch.css';
 
 function ResumeDatabase() {
+  const [filtersOpen, setFiltersOpen] = useState(false);
   const [candidates, setCandidates] = useState([]);
   const [filteredCandidates, setFilteredCandidates] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -21,7 +22,7 @@ function ResumeDatabase() {
   });
   const [currentPage, setCurrentPage] = useState(1);
   const [sortBy, setSortBy] = useState('relevance');
-  const [viewMode, setViewMode] = useState('grid'); // grid or list
+  const [viewMode, setViewMode] = useState('grid');
   const candidatesPerPage = 12;
 
   useEffect(() => {
@@ -43,7 +44,6 @@ function ResumeDatabase() {
         const data = await response.json();
         setCandidates(data.candidates || []);
       } else {
-        // Show empty state if API fails
         setCandidates([]);
         if (window.showPopup) {
           window.showPopup('Unable to load candidates. Please try again later.', 'error');
@@ -63,7 +63,6 @@ function ResumeDatabase() {
   const applyFilters = () => {
     let filtered = [...candidates];
 
-    // Search query filter
     if (searchQuery) {
       filtered = filtered.filter(candidate =>
         candidate.name.toLowerCase().includes(searchQuery.toLowerCase()) ||
@@ -73,7 +72,6 @@ function ResumeDatabase() {
       );
     }
 
-    // Apply all filters
     Object.keys(filters).forEach(filterKey => {
       const filterValue = filters[filterKey];
       if (!filterValue || (Array.isArray(filterValue) && filterValue.length === 0)) return;
@@ -119,8 +117,6 @@ function ResumeDatabase() {
           );
           break;
         case 'lastActive':
-          // Filter by last active time
-          const now = new Date();
           filtered = filtered.filter(candidate => {
             const lastActive = candidate.lastActive;
             switch (filterValue) {
@@ -138,7 +134,6 @@ function ResumeDatabase() {
       }
     });
 
-    // Apply sorting
     switch (sortBy) {
       case 'relevance':
         filtered.sort((a, b) => (b.matchScore || 0) - (a.matchScore || 0));
@@ -154,7 +149,6 @@ function ResumeDatabase() {
         });
         break;
       case 'lastActive':
-        // Sort by last active (most recent first)
         filtered.sort((a, b) => {
           const aActive = a.lastActive.includes('hour') ? 1 : a.lastActive.includes('day') ? parseInt(a.lastActive) : 999;
           const bActive = b.lastActive.includes('hour') ? 1 : b.lastActive.includes('day') ? parseInt(b.lastActive) : 999;
@@ -207,29 +201,38 @@ function ResumeDatabase() {
     window.location.href = `/recruiter/contact/${candidate.id}`;
   };
 
-  // Pagination
   const indexOfLastCandidate = currentPage * candidatesPerPage;
   const indexOfFirstCandidate = indexOfLastCandidate - candidatesPerPage;
   const currentCandidates = filteredCandidates.slice(indexOfFirstCandidate, indexOfLastCandidate);
   const totalPages = Math.ceil(filteredCandidates.length / candidatesPerPage);
 
   if (loading) {
-    return <div className="loading">Loading resume database...</div>;
+    return (
+      <div className="resume-database-page">
+        <div className="loading">
+          <i className="ri-loader-line"></i>
+          <p>Loading resume database...</p>
+        </div>
+      </div>
+    );
   }
 
+  const totalCandidates = candidates.length;
+  const activeCandidates = candidates.filter(c => c.lastActive.includes('hour') || (c.lastActive.includes('day') && parseInt(c.lastActive) <= 7)).length;
+  const newCandidates = candidates.filter(c => c.lastActive.includes('hour') || (c.lastActive.includes('day') && parseInt(c.lastActive) <= 3)).length;
+  const savedCandidates = 0;
+
   return (
-    <div className="jobs-page">
-      <div className="jobs-container">
-        {/* Header */}
-        <div className="jobs-header">
+    <div className="resume-database-page">
+      <div className="resume-database-container">
+        <div className="database-header">
           <div className="header-content">
             <h1>Resume Database</h1>
             <p>Search and discover talented candidates for your job openings</p>
           </div>
           
-          {/* Search Bar */}
-          <div className="search-section">
-            <div className="search-bar">
+          <div className="database-search-section">
+            <div className="database-search-bar">
               <i className="ri-search-line"></i>
               <input
                 type="text"
@@ -239,10 +242,28 @@ function ResumeDatabase() {
               />
             </div>
           </div>
+
+          <div className="database-stats">
+            <div className="stat-badge">
+              <i className="ri-user-line"></i>
+              <span>{totalCandidates} Total</span>
+            </div>
+            <div className="stat-badge">
+              <i className="ri-user-star-line"></i>
+              <span>{activeCandidates} Active</span>
+            </div>
+            <div className="stat-badge">
+              <i className="ri-user-add-line"></i>
+              <span>{newCandidates} New</span>
+            </div>
+            <div className="stat-badge">
+              <i className="ri-bookmark-line"></i>
+              <span>{savedCandidates} Saved</span>
+            </div>
+          </div>
         </div>
 
-        {/* Filters and Controls */}
-        <div className="jobs-controls">
+        <div className="database-controls">
           <div className="results-info">
             <span className="results-count">
               {filteredCandidates.length} candidate{filteredCandidates.length !== 1 ? 's' : ''} found
@@ -277,23 +298,22 @@ function ResumeDatabase() {
                 onClick={() => setViewMode('list')}
                 title="List View"
               >
-                <i className="ri-list-line"></i>
+                <i className="ri-list-check"></i>
               </button>
             </div>
           </div>
         </div>
 
-        <div className="jobs-content">
-          {/* Filters Sidebar */}
-          <div className="filters-sidebar">
-            <CandidateFilters 
-              filters={filters}
-              onFilterChange={handleFilterChange}
-            />
-          </div>
+        {/* Filters at the top - horizontal layout */}
+        <div className="filters-horizontal">
+          <CandidateFilters 
+            filters={filters}
+            onFilterChange={handleFilterChange}
+          />
+        </div>
 
-          {/* Candidates Grid/List */}
-          <div className="jobs-main">
+        <div className="database-content">
+          <div className="database-main">
             {currentCandidates.length > 0 ? (
               <>
                 <div className={`candidates-container ${viewMode}`}>
@@ -309,7 +329,6 @@ function ResumeDatabase() {
                   ))}
                 </div>
 
-                {/* Pagination */}
                 {totalPages > 1 && (
                   <div className="pagination">
                     <button

@@ -42,21 +42,7 @@ function ProfileDropdown({ userInfo, onLogout }) {
         onClick={() => setIsOpen(!isOpen)}
         aria-label="Profile menu"
       >
-        {userInfo?.profilePhoto ? (
-          <img 
-            src={userInfo.profilePhoto} 
-            alt="Profile" 
-            className="profile-avatar-img"
-            onError={(e) => {
-              e.target.style.display = 'none';
-              e.target.nextSibling.style.display = 'flex';
-            }}
-          />
-        ) : null}
-        <div 
-          className="profile-avatar-placeholder" 
-          style={{ display: userInfo?.profilePhoto ? 'none' : 'flex' }}
-        >
+        <div className="profile-avatar-placeholder">
           <i className="ri-user-line"></i>
         </div>
       </button>
@@ -90,17 +76,9 @@ function ProfileDropdown({ userInfo, onLogout }) {
                     transform="rotate(-90 40 40)"
                   />
                 </svg>
-                {userInfo?.profilePhoto ? (
-                  <img 
-                    src={userInfo.profilePhoto} 
-                    alt="Profile" 
-                    className="dropdown-avatar-img"
-                  />
-                ) : (
-                  <div className="dropdown-avatar-placeholder">
-                    <i className="ri-user-line"></i>
-                  </div>
-                )}
+                <div className="dropdown-avatar-placeholder">
+                  <i className="ri-user-line"></i>
+                </div>
               </div>
               <div className="completion-percent">{profileCompletion}%</div>
             </div>
@@ -168,20 +146,6 @@ function ProfileDropdown({ userInfo, onLogout }) {
                   onClick={() => setIsOpen(false)}
                 >
                   Dashboard
-                </Link>
-                <Link 
-                  to="/recruiter/posted-jobs" 
-                  className="dropdown-menu-item"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Posted Jobs
-                </Link>
-                <Link 
-                  to="/recruiter/search-candidates" 
-                  className="dropdown-menu-item"
-                  onClick={() => setIsOpen(false)}
-                >
-                  Search Candidates
                 </Link>
               </>
             )}

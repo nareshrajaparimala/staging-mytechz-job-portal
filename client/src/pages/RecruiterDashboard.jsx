@@ -1,367 +1,158 @@
-import React, { useState, useEffect } from 'react';
-import './UserDashboard.css'; // Reusing existing dashboard styles
+import React, { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
+import './RecruiterDashboard.css';
 
 function RecruiterDashboard() {
-  const [dashboardData, setDashboardData] = useState(null);
-  const [user, setUser] = useState(null);
-  const [activeTab, setActiveTab] = useState('overview');
-  const [hasCompanyProfile, setHasCompanyProfile] = useState(true); // Check for company profile instead
+  const navigate = useNavigate();
+  const [activeTab, setActiveTab] = useState('job-post');
 
-  useEffect(() => {
-    const userData = JSON.parse(localStorage.getItem('user'));
-    setUser(userData);
-    fetchDashboardData();
-    checkCompanyProfile();
+  const handleNavigation = (tab) => {
+    setActiveTab(tab);
     
-    const handleWindowFocus = () => {
-      fetchDashboardData();
-      checkCompanyProfile();
-    };
-
-    window.addEventListener('focus', handleWindowFocus);
-    
-    return () => {
-      window.removeEventListener('focus', handleWindowFocus);
-    };
-  }, []);
-
-  const checkCompanyProfile = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      
-      // Check for demo mode
-      if (token === 'demo-recruiter-token') {
-        setHasCompanyProfile(true);
-        return;
-      }
-      
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5010'}/api/recruiter/company-profile`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setHasCompanyProfile(data.success && data.profile !== null);
-      } else if (response.status === 404) {
-        setHasCompanyProfile(false);
-      }
-    } catch (error) {
-      console.error('Error checking company profile:', error);
-      setHasCompanyProfile(false);
+    // Navigate to respective pages
+    switch(tab) {
+      case 'job-post':
+        navigate('/recruiter/post-job');
+        break;
+      case 'resume-database':
+        navigate('/recruiter/resume-database');
+        break;
+      case 'internship-post':
+        navigate('/recruiter/post-internship');
+        break;
+      case 'get-report':
+        navigate('/recruiter/reports');
+        break;
+      default:
+        break;
     }
   };
-
-  const handlePostJobClick = () => {
-    if (!hasCompanyProfile) {
-      if (window.showPopup) {
-        window.showPopup('Please complete your company profile before posting jobs.', 'warning');
-      } else {
-        alert('Please complete your company profile before posting jobs.');
-      }
-      window.location.href = '/recruiter/company-profile';
-      return;
-    } else {
-      window.location.href = '/recruiter/post-job';
-    }
-  };
-
-  const fetchDashboardData = async () => {
-    try {
-      const token = localStorage.getItem('token');
-      const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5010'}/api/dashboard/recruiter`, {
-        headers: { Authorization: `Bearer ${token}` }
-      });
-      
-      if (response.ok) {
-        const data = await response.json();
-        setDashboardData(data);
-      } else {
-        // Fallback data if API fails
-        setDashboardData({
-          stats: { 
-            profilesViewed: 0, 
-            savedCandidates: 0, 
-            activeJobs: 0, 
-            subscriptionStatus: 'Free',
-            creditsRemaining: 0
-          },
-          recentActivity: [],
-          jobPosts: [],
-          savedProfiles: []
-        });
-      }
-    } catch (error) {
-      console.error('Error fetching dashboard data:', error);
-      // Fallback data if API fails
-      setDashboardData({
-        stats: { 
-          profilesViewed: 0, 
-          savedCandidates: 0, 
-          activeJobs: 0, 
-          subscriptionStatus: 'Free',
-          creditsRemaining: 0
-        },
-        recentActivity: [],
-        jobPosts: [],
-        savedProfiles: []
-      });
-    }
-  };
-
-  if (!dashboardData) {
-    return <div className="loading">Loading dashboard...</div>;
-  }
 
   return (
-    <div className="user-dashboard">
-      {/* Dashboard Header */}
-      <div className="dashboard-header">
-        <div className="welcome-section">
-          <h1>Welcome back, {user?.companyName || user?.name || 'Recruiter'}!</h1>
-          <p>Manage your recruitment activities and find the best candidates</p>
+    <div className="recruiter-dashboard">
+      {/* Navbar */}
+      <nav className="recruiter-navbar">
+        <div className="recruiter-navbar-container">
+          <div className="recruiter-nav-buttons">
+            <button
+              className={`recruiter-nav-btn ${activeTab === 'job-post' ? 'active' : ''}`}
+              onClick={() => handleNavigation('job-post')}
+            >
+              <i className="ri-briefcase-line"></i>
+              <span>Job Post</span>
+            </button>
+            
+            <button
+              className={`recruiter-nav-btn ${activeTab === 'resume-database' ? 'active' : ''}`}
+              onClick={() => handleNavigation('resume-database')}
+            >
+              <i className="ri-file-user-line"></i>
+              <span>Resume Database</span>
+            </button>
+            
+            <button
+              className={`recruiter-nav-btn ${activeTab === 'internship-post' ? 'active' : ''}`}
+              onClick={() => handleNavigation('internship-post')}
+            >
+              <i className="ri-graduation-cap-line"></i>
+              <span>Internship Post</span>
+            </button>
+            
+            <button
+              className={`recruiter-nav-btn ${activeTab === 'get-report' ? 'active' : ''}`}
+              onClick={() => handleNavigation('get-report')}
+            >
+              <i className="ri-bar-chart-box-line"></i>
+              <span>Get Report</span>
+            </button>
+          </div>
         </div>
-        
-        <div className="stats-overview">
-          <div className="stat-item">
-            <div className="stat-number">{dashboardData.stats.profilesViewed}</div>
-            <div className="stat-label">Profiles Viewed</div>
+      </nav>
+
+      {/* Main Content */}
+      <div className="recruiter-main-content">
+        <div className="recruiter-welcome-section">
+          <div className="welcome-text">
+            <h1>Welcome to Recruiter Dashboard</h1>
+            <p>Manage your job postings, internships, and access candidate database</p>
           </div>
-          <div className="stat-item">
-            <div className="stat-number">{dashboardData.stats.savedCandidates}</div>
-            <div className="stat-label">Saved Candidates</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-number">{dashboardData.stats.activeJobs}</div>
-            <div className="stat-label">Active Job Posts</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-number">{dashboardData.stats.creditsRemaining}</div>
-            <div className="stat-label">Credits Left</div>
-          </div>
-          <div className="stat-item">
-            <div className="stat-number">{dashboardData.stats.subscriptionStatus}</div>
-            <div className="stat-label">Plan</div>
+          <div className="welcome-image">
+            <img src="/photo1.webp" alt="Recruiter Dashboard" />
           </div>
         </div>
-      </div>
 
-      {/* Dashboard Navigation */}
-      <div className="dashboard-nav">
-        <button 
-          className={activeTab === 'overview' ? 'active' : ''}
-          onClick={() => setActiveTab('overview')}
-        >
-          Overview
-        </button>
-        <button 
-          className={activeTab === 'candidates' ? 'active' : ''}
-          onClick={() => setActiveTab('candidates')}
-        >
-          Search Candidates
-        </button>
-        <button 
-          className={activeTab === 'saved' ? 'active' : ''}
-          onClick={() => setActiveTab('saved')}
-        >
-          Saved Profiles
-        </button>
-        <button 
-          className={activeTab === 'jobs' ? 'active' : ''}
-          onClick={() => setActiveTab('jobs')}
-        >
-          Posted Jobs
-        </button>
-        <button 
-          className={activeTab === 'credits' ? 'active' : ''}
-          onClick={() => setActiveTab('credits')}
-        >
-          Credits & Plans
-        </button>
-        <button 
-          className={activeTab === 'messages' ? 'active' : ''}
-          onClick={() => setActiveTab('messages')}
-        >
-          Messages
-        </button>
-      </div>
-
-      {/* Dashboard Content */}
-      <div className="dashboard-main">
-        {activeTab === 'overview' && (
-          <div className="overview-section">
-            <div className="status-bars">
-              <h2>Recruitment Activity</h2>
-              <div className="status-bar-container">
-                <div className="status-bar">
-                  <div className="bar-label">Profiles</div>
-                  <div className="bar">
-                    <div 
-                      className="bar-fill pending" 
-                      style={{ width: `${Math.min((dashboardData.stats.profilesViewed / 100) * 100, 100)}%` }}
-                    ></div>
-                  </div>
-                  <div className="bar-percentage">{dashboardData.stats.profilesViewed}</div>
-                </div>
-                
-                <div className="status-bar">
-                  <div className="bar-label">Saved</div>
-                  <div className="bar">
-                    <div 
-                      className="bar-fill approved" 
-                      style={{ width: `${Math.min((dashboardData.stats.savedCandidates / 50) * 100, 100)}%` }}
-                    ></div>
-                  </div>
-                  <div className="bar-percentage">{dashboardData.stats.savedCandidates}</div>
-                </div>
-                
-                <div className="status-bar">
-                  <div className="bar-label">Jobs</div>
-                  <div className="bar">
-                    <div 
-                      className="bar-fill rejected" 
-                      style={{ width: `${Math.min((dashboardData.stats.activeJobs / 20) * 100, 100)}%` }}
-                    ></div>
-                  </div>
-                  <div className="bar-percentage">{dashboardData.stats.activeJobs}</div>
-                </div>
-              </div>
+        {/* Quick Stats */}
+        <div className="recruiter-stats-grid">
+          <div className="recruiter-stat-card">
+            <div className="stat-icon job-icon">
+              <i className="ri-briefcase-line"></i>
             </div>
-
-            {/* Quick Actions */}
-            <div className="quick-actions">
-              <h2>Quick Actions</h2>
-              <div className="action-grid">
-                <button 
-                  className="quick-action-card"
-                  onClick={() => setActiveTab('candidates')}
-                >
-                  <div className="action-icon blue">
-                    <i className="ri-search-line"></i>
-                  </div>
-                  <div className="action-content">
-                    <h3>Search Candidates</h3>
-                    <p>Find the perfect candidates for your jobs</p>
-                  </div>
-                </button>
-                
-                <button 
-                  className="quick-action-card"
-                  onClick={handlePostJobClick}
-                >
-                  <div className="action-icon green">
-                    <i className="ri-add-line"></i>
-                  </div>
-                  <div className="action-content">
-                    <h3>Post New Job</h3>
-                    <p>Create and publish a new job posting</p>
-                  </div>
-                </button>
-                
-                <button 
-                  className="quick-action-card"
-                  onClick={() => setActiveTab('saved')}
-                >
-                  <div className="action-icon orange">
-                    <i className="ri-bookmark-line"></i>
-                  </div>
-                  <div className="action-content">
-                    <h3>Saved Profiles</h3>
-                    <p>View your saved candidate profiles</p>
-                  </div>
-                </button>
-                
-                <button 
-                  className="quick-action-card"
-                  onClick={() => setActiveTab('credits')}
-                >
-                  <div className="action-icon red">
-                    <i className="ri-coin-line"></i>
-                  </div>
-                  <div className="action-content">
-                    <h3>Buy Credits</h3>
-                    <p>Purchase credits to unlock more features</p>
-                  </div>
-                </button>
-              </div>
+            <div className="stat-info">
+              <h3>Active Jobs</h3>
+              <p className="stat-number">12</p>
             </div>
           </div>
-        )}
 
-        {activeTab === 'candidates' && (
-          <div className="candidates-section">
-            <div className="section-placeholder">
-              <h2>Resume Database</h2>
-              <p>Search and filter candidates will be implemented here</p>
-              <button 
-                className="cta-btn"
-                onClick={() => window.location.href = '/recruiter/search-candidates'}
-              >
-                Go to Candidate Search
-              </button>
+          <div className="recruiter-stat-card">
+            <div className="stat-icon resume-icon">
+              <i className="ri-file-user-line"></i>
+            </div>
+            <div className="stat-info">
+              <h3>Total Applications</h3>
+              <p className="stat-number">248</p>
             </div>
           </div>
-        )}
 
-        {activeTab === 'saved' && (
-          <div className="saved-section">
-            <div className="section-placeholder">
-              <h2>Saved Candidate Profiles</h2>
-              <p>Your saved candidate profiles will appear here</p>
-              <button 
-                className="cta-btn"
-                onClick={() => window.location.href = '/recruiter/saved-profiles'}
-              >
-                View All Saved Profiles
-              </button>
+          <div className="recruiter-stat-card">
+            <div className="stat-icon internship-icon">
+              <i className="ri-graduation-cap-line"></i>
+            </div>
+            <div className="stat-info">
+              <h3>Internships</h3>
+              <p className="stat-number">5</p>
             </div>
           </div>
-        )}
 
-        {activeTab === 'jobs' && (
-          <div className="jobs-section">
-            <div className="section-placeholder">
-              <h2>Posted Jobs</h2>
-              <p>Manage your job postings and applications</p>
-              <button 
-                className="cta-btn"
-                onClick={() => window.location.href = '/recruiter/posted-jobs'}
-              >
-                Manage Job Posts
-              </button>
+          <div className="recruiter-stat-card">
+            <div className="stat-icon report-icon">
+              <i className="ri-bar-chart-box-line"></i>
+            </div>
+            <div className="stat-info">
+              <h3>Reports Generated</h3>
+              <p className="stat-number">18</p>
             </div>
           </div>
-        )}
+        </div>
 
-        {activeTab === 'credits' && (
-          <div className="credits-section">
-            <div className="section-placeholder">
-              <h2>Credits & Subscription</h2>
-              <p>Current Plan: {dashboardData.stats.subscriptionStatus}</p>
-              <p>Credits Remaining: {dashboardData.stats.creditsRemaining}</p>
-              <button 
-                className="cta-btn"
-                onClick={() => window.location.href = '/recruiter/subscription'}
-              >
-                Manage Subscription
-              </button>
+        {/* Quick Actions */}
+        <div className="recruiter-quick-actions">
+          <h2>Quick Actions</h2>
+          <div className="action-cards-grid">
+            <div className="action-card" onClick={() => handleNavigation('job-post')}>
+              <i className="ri-add-circle-line"></i>
+              <h3>Post New Job</h3>
+              <p>Create and publish a new job opening</p>
+            </div>
+
+            <div className="action-card" onClick={() => handleNavigation('resume-database')}>
+              <i className="ri-search-line"></i>
+              <h3>Search Candidates</h3>
+              <p>Browse through candidate profiles</p>
+            </div>
+
+            <div className="action-card" onClick={() => handleNavigation('internship-post')}>
+              <i className="ri-add-circle-line"></i>
+              <h3>Post Internship</h3>
+              <p>Create internship opportunities</p>
+            </div>
+
+            <div className="action-card" onClick={() => handleNavigation('get-report')}>
+              <i className="ri-download-line"></i>
+              <h3>Download Report</h3>
+              <p>Get detailed analytics and reports</p>
             </div>
           </div>
-        )}
-
-        {activeTab === 'messages' && (
-          <div className="messages-section">
-            <div className="section-placeholder">
-              <h2>Messages</h2>
-              <p>Chat with candidates and manage communications</p>
-              <button 
-                className="cta-btn"
-                onClick={() => window.location.href = '/recruiter/messages'}
-              >
-                Open Messages
-              </button>
-            </div>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

@@ -1,0 +1,520 @@
+/* ===== Company Profile Page - Clean Modern Design ===== */
+
+.company-profile-page {
+  min-height: 100vh;
+  background: #ffffff;
+  padding: 40px 0;
+}
+
+/* Loading State */
+.company-profile-page .loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 60vh;
+  gap: 16px;
+}
+
+.company-profile-page .loading i {
+  font-size: 48px;
+  color: #6c63ff;
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
+}
+
+.company-profile-page .loading p {
+  font-size: 17px;
+  color: #666;
+  font-weight: 500;
+}
+
+/* Container */
+.company-profile-container {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 0 24px;
+}
+
+/* Profile Header */
+.profile-header {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 36px 40px;
+  margin-bottom: 32px;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+.profile-header-content {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 24px;
+}
+
+.profile-header-left h1 {
+  font-size: 28px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 8px 0;
+  letter-spacing: -0.5px;
+}
+
+.profile-header-left p {
+  font-size: 15px;
+  color: #6b7280;
+  margin: 0;
+  line-height: 1.5;
+}
+
+.profile-header-actions {
+  display: flex;
+  gap: 12px;
+}
+
+.edit-profile-btn,
+.save-profile-btn,
+.cancel-profile-btn {
+  padding: 11px 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  white-space: nowrap;
+}
+
+.edit-profile-btn {
+  background: #111827;
+  color: #ffffff;
+}
+
+.edit-profile-btn:hover {
+  background: #1f2937;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.save-profile-btn {
+  background: #6c63ff;
+  color: #ffffff;
+}
+
+.save-profile-btn:hover {
+  background: #5a52d5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.3);
+}
+
+.save-profile-btn:disabled {
+  background: #9ca3af;
+  cursor: not-allowed;
+  transform: none;
+  box-shadow: none;
+}
+
+.cancel-profile-btn {
+  background: #f3f4f6;
+  color: #374151;
+  border: 1px solid #e5e7eb;
+}
+
+.cancel-profile-btn:hover {
+  background: #e5e7eb;
+  border-color: #d1d5db;
+}
+
+.spinning {
+  animation: spin 1s linear infinite;
+}
+
+/* View Mode Alert */
+.view-mode-alert {
+  background: #eff6ff;
+  border: 1px solid #bfdbfe;
+  border-radius: 10px;
+  padding: 14px 18px;
+  margin-bottom: 24px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.view-mode-alert i {
+  font-size: 18px;
+  color: #3b82f6;
+  flex-shrink: 0;
+}
+
+.view-mode-alert span {
+  margin: 0;
+  font-size: 14px;
+  color: #1e40af;
+  line-height: 1.5;
+}
+
+/* Error Alert */
+.error-alert {
+  background: #fef2f2;
+  border: 1px solid #fecaca;
+  border-radius: 10px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+}
+
+.error-alert-header {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 12px;
+}
+
+.error-alert-header i {
+  font-size: 18px;
+  color: #dc2626;
+}
+
+.error-alert-header strong {
+  font-size: 14px;
+  color: #991b1b;
+  font-weight: 600;
+}
+
+.error-alert ul {
+  margin: 0;
+  padding-left: 28px;
+  list-style: disc;
+}
+
+.error-alert li {
+  font-size: 13px;
+  color: #991b1b;
+  margin-bottom: 4px;
+  line-height: 1.5;
+}
+
+.error-alert li:last-child {
+  margin-bottom: 0;
+}
+
+/* Profile Content */
+.profile-content {
+  background: #ffffff;
+  border-radius: 12px;
+  padding: 0;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.06);
+  border: 1px solid #e5e7eb;
+}
+
+/* Form */
+.company-profile-form {
+  padding: 0;
+}
+
+/* Section */
+.profile-section {
+  padding: 36px 40px;
+  border-bottom: 1px solid #f3f4f6;
+}
+
+.profile-section:last-child {
+  border-bottom: none;
+}
+
+.profile-section h2 {
+  font-size: 20px;
+  font-weight: 700;
+  color: #111827;
+  margin: 0 0 28px 0;
+  letter-spacing: -0.3px;
+}
+
+/* Form Grid */
+.profile-form-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 24px;
+}
+
+.profile-form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.profile-form-group label {
+  font-size: 13px;
+  font-weight: 600;
+  color: #374151;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  letter-spacing: 0.2px;
+}
+
+.profile-form-group label .required {
+  color: #ef4444;
+  font-size: 14px;
+}
+
+.profile-form-group input,
+.profile-form-group select,
+.profile-form-group textarea {
+  padding: 11px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  transition: all 0.2s ease;
+  font-family: inherit;
+  background: #ffffff;
+}
+
+.profile-form-group input:focus,
+.profile-form-group select:focus,
+.profile-form-group textarea:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+}
+
+.profile-form-group input:disabled,
+.profile-form-group select:disabled,
+.profile-form-group textarea:disabled {
+  background: #f9fafb;
+  color: #6b7280;
+  cursor: not-allowed;
+  border-color: #e5e7eb;
+}
+
+.profile-form-group textarea {
+  min-height: 100px;
+  resize: vertical;
+  line-height: 1.6;
+}
+
+.profile-form-group .error-message {
+  font-size: 12px;
+  color: #ef4444;
+  margin-top: 2px;
+  font-weight: 500;
+}
+
+.profile-form-group input.error,
+.profile-form-group select.error,
+.profile-form-group textarea.error {
+  border-color: #ef4444;
+}
+
+/* Full Width Form Group */
+.profile-form-group-full {
+  grid-column: 1 / -1;
+}
+
+/* Benefits Input Container */
+.benefits-input-container {
+  display: flex;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.benefits-input-container input {
+  flex: 1;
+  padding: 11px 14px;
+  border: 1px solid #d1d5db;
+  border-radius: 8px;
+  font-size: 14px;
+  color: #111827;
+  transition: all 0.2s ease;
+}
+
+.benefits-input-container input:focus {
+  outline: none;
+  border-color: #6c63ff;
+  box-shadow: 0 0 0 3px rgba(108, 99, 255, 0.1);
+}
+
+.benefits-add-btn {
+  padding: 11px 20px;
+  background: #6c63ff;
+  color: #ffffff;
+  border: none;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+
+.benefits-add-btn:hover {
+  background: #5a52d5;
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(108, 99, 255, 0.25);
+}
+
+.benefits-list {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  min-height: 40px;
+}
+
+.benefit-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  padding: 8px 14px;
+  background: #6c63ff;
+  color: #ffffff;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 500;
+  transition: all 0.2s ease;
+}
+
+.benefit-tag i {
+  cursor: pointer;
+  font-size: 14px;
+  transition: transform 0.2s ease;
+}
+
+.benefit-tag i:hover {
+  transform: scale(1.2);
+}
+
+/* View Mode Styling */
+.company-profile-form.view-mode .profile-form-group input,
+.company-profile-form.view-mode .profile-form-group select,
+.company-profile-form.view-mode .profile-form-group textarea {
+  background: #f9fafb;
+  border-color: #e5e7eb;
+}
+
+/* Responsive Design */
+@media (max-width: 968px) {
+  .profile-form-grid {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 768px) {
+  .company-profile-page {
+    padding: 24px 0;
+  }
+
+  .company-profile-container {
+    padding: 0 16px;
+  }
+
+  .profile-header {
+    padding: 28px 24px;
+  }
+
+  .profile-header-content {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+
+  .profile-header-left h1 {
+    font-size: 24px;
+  }
+
+  .profile-header-left p {
+    font-size: 14px;
+  }
+
+  .profile-header-actions {
+    width: 100%;
+    flex-direction: column;
+  }
+
+  .edit-profile-btn,
+  .save-profile-btn,
+  .cancel-profile-btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  .profile-section {
+    padding: 28px 24px;
+  }
+
+  .profile-section h2 {
+    font-size: 18px;
+    margin-bottom: 24px;
+  }
+
+  .profile-form-grid {
+    gap: 20px;
+  }
+
+  .benefits-input-container {
+    flex-direction: column;
+  }
+
+  .benefits-add-btn {
+    width: 100%;
+    justify-content: center;
+  }
+}
+
+@media (max-width: 480px) {
+  .company-profile-page {
+    padding: 16px 0;
+  }
+
+  .profile-header {
+    padding: 24px 20px;
+    margin-bottom: 20px;
+  }
+
+  .profile-header-left h1 {
+    font-size: 22px;
+  }
+
+  .profile-header-left p {
+    font-size: 13px;
+  }
+
+  .profile-section {
+    padding: 24px 20px;
+  }
+
+  .profile-section h2 {
+    font-size: 17px;
+    margin-bottom: 20px;
+  }
+
+  .profile-form-grid {
+    gap: 18px;
+  }
+
+  .profile-form-group label {
+    font-size: 12px;
+  }
+
+  .profile-form-group input,
+  .profile-form-group select,
+  .profile-form-group textarea {
+    font-size: 13px;
+    padding: 10px 12px;
+  }
+
+  .edit-profile-btn,
+  .save-profile-btn,
+  .cancel-profile-btn {
+    font-size: 13px;
+    padding: 10px 20px;
+  }
+}

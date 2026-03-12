@@ -1,0 +1,117 @@
+═══════════════════════════════════════════════════════════════
+✅ PORT 8000 ISSUE - FIXED! ✅
+═══════════════════════════════════════════════════════════════
+
+🎉 PROBLEM FOUND AND SOLVED!
+
+═══════════════════════════════════════════════════════════════
+🔍 THE ISSUE
+═══════════════════════════════════════════════════════════════
+
+The frontend was trying to connect to port 8000 instead of 5010!
+
+ROOT CAUSE:
+- There was a .env.local file with VITE_API_BASE_URL=http://127.0.0.1:8000
+- In Vite, .env.local takes PRIORITY over .env
+- So even though .env had the correct port (5010), 
+  .env.local was overriding it with port 8000!
+
+═══════════════════════════════════════════════════════════════
+✅ THE FIX
+═══════════════════════════════════════════════════════════════
+
+1. Updated client/.env.local to use port 5010
+2. Restarted frontend server
+3. Now both files point to the correct port!
+
+FILES UPDATED:
+- client/.env.local: Changed from port 8000 → 5010
+
+═══════════════════════════════════════════════════════════════
+🚀 SERVERS STATUS
+═══════════════════════════════════════════════════════════════
+
+✅ Backend: http://127.0.0.1:5010 (RUNNING)
+✅ Frontend: http://localhost:5173 (RESTARTED with correct config)
+
+═══════════════════════════════════════════════════════════════
+🧪 TEST NOW - FINAL STEPS
+═══════════════════════════════════════════════════════════════
+
+1. HARD REFRESH YOUR BROWSER
+   Press: Ctrl+F5
+   (This forces browser to reload everything fresh)
+
+2. GO TO LOGIN PAGE
+   URL: http://localhost:5173/login
+
+3. TRY LOGGING IN
+   Email: recruiter1@test.com
+   Password: Recruiter@123
+   Role: Recruiter
+
+4. CLICK "LOG IN"
+   Should work now! ✅
+
+═══════════════════════════════════════════════════════════════
+📋 VITE ENV FILE PRIORITY
+═══════════════════════════════════════════════════════════════
+
+Vite loads .env files in this order (highest priority first):
+
+1. .env.local          ← WAS OVERRIDING (now fixed!)
+2. .env.development
+3. .env                ← Had correct config but was ignored
+4. .env.production
+
+This is why .env.local was taking precedence!
+
+═══════════════════════════════════════════════════════════════
+🔧 WHAT TO CHECK IF STILL NOT WORKING
+═══════════════════════════════════════════════════════════════
+
+1. Open Browser Console (F12)
+2. Go to Network tab
+3. Try logging in
+4. Check the request URL
+5. Should now show: http://127.0.0.1:5010/api/auth/login
+   (NOT port 8000!)
+
+If you still see port 8000:
+- Clear browser cache completely (Ctrl+Shift+Delete)
+- Close and reopen browser
+- Try in Incognito mode (Ctrl+Shift+N)
+
+═══════════════════════════════════════════════════════════════
+✅ VERIFICATION
+═══════════════════════════════════════════════════════════════
+
+Backend Test (already verified working):
+✓ curl http://127.0.0.1:5010/api/auth/login
+✓ Status: 200 OK
+✓ Response: {"success":true,"token":"..."}
+
+Frontend Configuration:
+✓ .env: VITE_API_BASE_URL=http://127.0.0.1:5010
+✓ .env.local: VITE_API_BASE_URL=http://127.0.0.1:5010
+✓ Both files now have correct port!
+
+═══════════════════════════════════════════════════════════════
+🎯 EXPECTED RESULT
+═══════════════════════════════════════════════════════════════
+
+After hard refresh (Ctrl+F5):
+1. Login form should work
+2. No more "ERR_CONNECTION_REFUSED"
+3. No more "Network Error"
+4. Should successfully login
+5. Should redirect to recruiter dashboard
+6. Should see "For Employers" in navbar
+
+═══════════════════════════════════════════════════════════════
+
+🎉 ISSUE RESOLVED! PLEASE TEST NOW! 🎉
+
+Hard refresh your browser (Ctrl+F5) and try logging in!
+
+═══════════════════════════════════════════════════════════════

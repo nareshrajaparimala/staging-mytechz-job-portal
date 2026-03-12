@@ -69,14 +69,29 @@ function PostJob() {
         return;
       }
 
-      // Fetch company profile to check if it exists
+      // Fetch company profile to check if it exists and has all mandatory fields
       const response = await fetch(`${import.meta.env.VITE_API_BASE_URL || 'http://localhost:5010'}/api/recruiter/company-profile`, {
         headers: { Authorization: `Bearer ${token}` }
       });
 
       if (response.ok) {
         const data = await response.json();
-        setHasCompanyProfile(data.success && data.profile !== null);
+        if (data.success && data.profile) {
+          const profile = data.profile;
+          // Check all mandatory fields
+          const hasMandatoryFields = 
+            profile.company_name && 
+            profile.website && 
+            profile.industry && 
+            profile.company_size && 
+            profile.founded_year && 
+            profile.work_mode && 
+            profile.office_address;
+          
+          setHasCompanyProfile(hasMandatoryFields);
+        } else {
+          setHasCompanyProfile(false);
+        }
       } else if (response.status === 404) {
         setHasCompanyProfile(false);
       } else {
@@ -129,7 +144,7 @@ function PostJob() {
           </div>
           
           <h2 style={{ color: '#333', marginBottom: '1rem' }}>
-            Company Profile Information Pending
+            Complete Company Profile Required
           </h2>
           
           <p style={{ 
@@ -138,7 +153,7 @@ function PostJob() {
             lineHeight: '1.6',
             marginBottom: '1.5rem'
           }}>
-            Please complete your company profile to start posting jobs.
+            Please complete ALL mandatory fields in your company profile to start posting jobs.
           </p>
 
           <div style={{
@@ -149,13 +164,20 @@ function PostJob() {
             textAlign: 'left'
           }}>
             <h3 style={{ fontSize: '1rem', color: '#333', marginBottom: '1rem' }}>
-              <i className="ri-checkbox-circle-line" style={{ color: '#28a745' }}></i> Next Steps:
+              <i className="ri-information-line" style={{ color: '#4A90E2' }}></i> Required Fields:
             </h3>
-            <ol style={{ paddingLeft: '1.5rem', color: '#666', lineHeight: '1.8' }}>
-              <li>Complete your company profile with basic information</li>
-              <li>Once saved, you can immediately start posting jobs</li>
-              <li>No admin approval required</li>
-            </ol>
+            <ul style={{ paddingLeft: '1.5rem', color: '#666', lineHeight: '1.8' }}>
+              <li>Company Name</li>
+              <li>Website</li>
+              <li>Industry</li>
+              <li>Company Size</li>
+              <li>Founded Year</li>
+              <li>Work Mode</li>
+              <li>Office Address</li>
+            </ul>
+            <p style={{ marginTop: '1rem', color: '#856404', fontWeight: '500' }}>
+              <i className="ri-alert-line"></i> All fields marked with * must be filled before you can post jobs.
+            </p>
           </div>
 
           <div style={{ display: 'flex', gap: '1rem', justifyContent: 'center' }}>
@@ -201,7 +223,7 @@ function PostJob() {
   const steps = [
     { id: 1, title: 'Basic Details', icon: 'ri-information-line' },
     { id: 2, title: 'Job Description', icon: 'ri-file-text-line' },
-    { id: 3, title: 'Requirements', icon: 'ri-list-check-line' },
+    { id: 3, title: 'Requirements', icon: 'ri-list-check' },
     { id: 4, title: 'Application Settings', icon: 'ri-settings-line' },
     { id: 5, title: 'Preview & Publish', icon: 'ri-eye-line' }
   ];

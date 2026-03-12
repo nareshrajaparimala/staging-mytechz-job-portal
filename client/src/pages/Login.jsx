@@ -62,7 +62,7 @@ function Login() {
       // Dispatch auth change event
       window.dispatchEvent(new Event('authChange'));
       
-      window.location.href = '/dashboard/user';
+      window.location.href = '/candidate/home';
       return;
     }
     
@@ -107,7 +107,7 @@ function Login() {
         } else if (response.data.user.role === 'recruiter') {
           window.location.href = '/recruiter';
         } else {
-          window.location.href = '/dashboard/user';
+          window.location.href = '/candidate/home';
         }
       }
 

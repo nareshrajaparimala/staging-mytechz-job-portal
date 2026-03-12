@@ -1,20 +1,22 @@
-/* Candidate Card Styles - Cloned from JobCard.css */
+/* Candidate Card Styles - Enhanced Design */
 .candidate-card {
-  background: var(--bg-surface, var(--bg-page));
-  border: 1px solid var(--border-subtle);
-  border-radius: 12px;
-  padding: 18px;
-  height: 420px;
+  background: white;
+  border: 1px solid #e2e8f0;
+  border-radius: 16px;
+  padding: 20px;
+  height: 440px;
   display: flex;
   flex-direction: column;
   width: 100%;
   cursor: pointer;
-  transition: transform 0.2s ease, border-color 0.2s ease;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.05);
 }
 
 .candidate-card:hover {
-  transform: translateY(-2px);
-  border-color: var(--accent);
+  transform: translateY(-4px);
+  border-color: #667eea;
+  box-shadow: 0 8px 25px rgba(102, 126, 234, 0.15);
 }
 
 /* ===== Header ===== */
@@ -26,15 +28,16 @@
 }
 
 .candidate-avatar {
-  width: 44px;
-  height: 44px;
+  width: 50px;
+  height: 50px;
   border-radius: 50%;
-  background: var(--bg-elevated, #f8f9fa);
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
   display: flex;
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
   overflow: hidden;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.2);
 }
 
 .candidate-avatar img {
@@ -44,8 +47,8 @@
 }
 
 .default-avatar {
-  color: var(--accent);
-  font-size: 1.3rem;
+  color: white;
+  font-size: 1.5rem;
 }
 
 .candidate-info {
@@ -215,31 +218,37 @@
 .view-profile-btn,
 .contact-btn {
   flex: 1;
-  padding: 8px 12px;
-  border: 1px solid var(--border-subtle);
-  border-radius: 6px;
-  background: var(--bg-page);
-  color: var(--text-main);
-  font-size: 0.85rem;
-  font-weight: 500;
+  padding: 10px 14px;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.9rem;
+  font-weight: 600;
   cursor: pointer;
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 6px;
-  transition: all 0.2s ease;
+  transition: all 0.3s ease;
+}
+
+.view-profile-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  color: white;
 }
 
 .view-profile-btn:hover {
-  background: var(--accent);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
+}
+
+.contact-btn {
+  background: linear-gradient(135deg, #22c55e 0%, #16a34a 100%);
   color: white;
-  border-color: var(--accent);
 }
 
 .contact-btn:hover {
-  background: var(--success);
-  color: white;
-  border-color: var(--success);
+  transform: translateY(-2px);
+  box-shadow: 0 4px 15px rgba(34, 197, 94, 0.3);
 }
 
 .view-profile-btn i,
