@@ -225,13 +225,19 @@ function Register() {
               {/* Checkboxes */}
               <div className="checkbox-row">
                 <label>
-                  <input type="checkbox" required /> I agree to the <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Use</a>
+                  <input type="checkbox" required />
+                  <span className="checkbox-text">
+                    I agree to the <a href="/privacy-policy" target="_blank" rel="noopener noreferrer">Privacy Policy</a> and <a href="/terms" target="_blank" rel="noopener noreferrer">Terms of Use</a>
+                  </span>
                 </label>
               </div>
 
               <div className="checkbox-row">
                 <label>
-                  <input type="checkbox" /> Stay in the loop – Get relevant updates curated just for <em>you!</em>
+                  <input type="checkbox" />
+                  <span className="checkbox-text">
+                    Stay in the loop – Get relevant updates curated just for <em>you!</em>
+                  </span>
                 </label>
               </div>
 
