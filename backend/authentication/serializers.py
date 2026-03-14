@@ -119,102 +119,64 @@ class UserProfileSerializer(serializers.ModelSerializer):
         return obj.get_skills_list()
 
 class UserProfileUpdateSerializer(serializers.ModelSerializer):
-    """Serializer for updating user profile"""
-    
-    # Handle frontend field names
-    firstName = serializers.CharField(source='first_name', required=False, allow_blank=True)
-    lastName = serializers.CharField(source='last_name', required=False, allow_blank=True)
-    dateOfBirth = serializers.DateField(source='date_of_birth', required=False, allow_null=True)
-    linkedin = serializers.URLField(source='linkedin_url', required=False, allow_blank=True, allow_null=True)
-    github = serializers.URLField(source='github_url', required=False, allow_blank=True, allow_null=True)
-    portfolio = serializers.URLField(source='portfolio_url', required=False, allow_blank=True, allow_null=True)
-    
-    # Override fields that might have validation issues
-    phone = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    experience = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    education = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    bio = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    address = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    city = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    state = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    pincode = serializers.CharField(required=False, allow_blank=True, allow_null=True)
-    gender = serializers.CharField(required=False, allow_blank=True, allow_null=True)
+    """Serializer for updating user profile - simplified version"""
     
     class Meta:
         model = User
         fields = [
-            'firstName', 'lastName', 'phone',
-            'dateOfBirth', 'gender', 'address', 'city', 'state', 'pincode', 'bio',
+            'first_name', 'last_name', 'phone', 'gender', 
+            'address', 'city', 'state', 'pincode', 'bio',
             'skills', 'experience', 'education',
-            'linkedin', 'github', 'portfolio',
-            # Keep original field names for compatibility
-            'first_name', 'last_name', 'date_of_birth',
             'linkedin_url', 'github_url', 'portfolio_url'
         ]
-    
-    def to_internal_value(self, data):
-        """Convert frontend data format to backend format"""
-        # Handle skills array conversion
-        if 'skills' in data and isinstance(data['skills'], list):
-            data = data.copy()  # Don't modify original data
-            data['skills'] = ', '.join(data['skills'])
-        
-        # Convert empty strings to None for optional fields
-        optional_fields = ['experience', 'education', 'bio', 'address', 'city', 'state', 'pincode', 'linkedin', 'github', 'portfolio']
-        for field in optional_fields:
-            if field in data and data[field] == '':
-                data = data.copy() if not hasattr(data, 'copy') or data is data.copy() else data
-                data[field] = None
-        
-        # Handle phone validation - remove non-digits except + and spaces
-        if 'phone' in data and data['phone']:
-            phone = data['phone'].strip()
-            if phone and not phone.startswith('+'):
-                # If it's just digits, assume it's a valid phone number
-                if phone.replace(' ', '').replace('-', '').replace('(', '').replace(')', '').isdigit():
-                    # Keep only digits for validation
-                    phone = ''.join(filter(str.isdigit, phone))
-                    if len(phone) >= 9:  # Minimum length for phone
-                        data = data.copy() if not hasattr(data, 'copy') or data is data.copy() else data
-                        data['phone'] = phone
-        
-        # Handle social links - add https:// if missing
-        social_fields = ['linkedin', 'github', 'portfolio']
-        for field in social_fields:
-            if field in data and data[field] and not data[field].startswith(('http://', 'https://')):
-                data = data.copy() if not hasattr(data, 'copy') or data is data.copy() else data
-                data[field] = f'https://{data[field]}'
-        
-        return super().to_internal_value(data)
+        extra_kwargs = {
+            'first_name': {'required': False, 'allow_blank': True},
+            'last_name': {'required': False, 'allow_blank': True},
+            'phone': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'gender': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'address': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'city': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'state': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'pincode': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'bio': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'skills': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'experience': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'education': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'linkedin_url': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'github_url': {'required': False, 'allow_blank': True, 'allow_null': True},
+            'portfolio_url': {'required': False, 'allow_blank': True, 'allow_null': True},
+        }
     
     def validate_phone(self, value):
-        """Custom phone validation"""
+        """Simple phone validation"""
         if not value:
             return value
         
         # Remove spaces, dashes, parentheses
         cleaned = value.replace(' ', '').replace('-', '').replace('(', '').replace(')', '')
         
-        # If it starts with +, keep it, otherwise just digits
-        if cleaned.startswith('+'):
-            # International format
-            if len(cleaned) < 10 or len(cleaned) > 16:
-                raise serializers.ValidationError("Phone number must be between 10-16 characters for international format.")
-        else:
-            # Domestic format - just digits
-            if not cleaned.isdigit() or len(cleaned) < 9 or len(cleaned) > 15:
-                raise serializers.ValidationError("Phone number must be 9-15 digits.")
+        # Basic validation - just check length
+        if len(cleaned) < 9 or len(cleaned) > 15:
+            raise serializers.ValidationError("Phone number must be between 9-15 characters.")
         
         return cleaned
     
-    def validate_dateOfBirth(self, value):
-        if value and value > datetime.now().date():
-            raise serializers.ValidationError("Date of birth cannot be in the future.")
+    def validate_linkedin_url(self, value):
+        """Simple URL validation"""
+        if value and not value.startswith(('http://', 'https://')):
+            return f'https://{value}'
         return value
     
-    def validate_date_of_birth(self, value):
-        if value and value > datetime.now().date():
-            raise serializers.ValidationError("Date of birth cannot be in the future.")
+    def validate_github_url(self, value):
+        """Simple URL validation"""
+        if value and not value.startswith(('http://', 'https://')):
+            return f'https://{value}'
+        return value
+    
+    def validate_portfolio_url(self, value):
+        """Simple URL validation"""
+        if value and not value.startswith(('http://', 'https://')):
+            return f'https://{value}'
         return value
 
 class ResumeUploadSerializer(serializers.ModelSerializer):

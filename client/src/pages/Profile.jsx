@@ -125,35 +125,62 @@ function Profile() {
       
       const cleanProfile = { ...profile };
       
+      // Convert frontend field names to backend field names
+      const backendProfile = {
+        first_name: cleanProfile.firstName,
+        last_name: cleanProfile.lastName,
+        phone: cleanProfile.phone,
+        gender: cleanProfile.gender,
+        address: cleanProfile.address,
+        city: cleanProfile.city,
+        state: cleanProfile.state,
+        pincode: cleanProfile.pincode,
+        bio: cleanProfile.bio,
+        experience: cleanProfile.experience,
+        education: cleanProfile.education,
+        linkedin_url: cleanProfile.linkedin,
+        github_url: cleanProfile.github,
+        portfolio_url: cleanProfile.portfolio,
+        skills: Array.isArray(cleanProfile.skills) ? cleanProfile.skills.join(', ') : cleanProfile.skills || ''
+      };
+      
       // Clean up phone number - remove any formatting
-      if (cleanProfile.phone) {
-        cleanProfile.phone = cleanProfile.phone.replace(/[^\d+]/g, '');
+      if (backendProfile.phone) {
+        backendProfile.phone = backendProfile.phone.replace(/[^\d+]/g, '');
         // If it's just digits and reasonable length, keep it
-        if (cleanProfile.phone && !/^\+/.test(cleanProfile.phone) && cleanProfile.phone.length >= 9 && cleanProfile.phone.length <= 15) {
+        if (backendProfile.phone && !/^\+/.test(backendProfile.phone) && backendProfile.phone.length >= 9 && backendProfile.phone.length <= 15) {
           // Valid phone number
-        } else if (cleanProfile.phone && cleanProfile.phone.length < 9) {
+        } else if (backendProfile.phone && backendProfile.phone.length < 9) {
           throw new Error('Phone number must be at least 9 digits long.');
         }
       }
       
-      const optionalFields = ['bio', 'address', 'city', 'state', 'pincode', 'experience', 'education', 'linkedin', 'github', 'portfolio'];
+      // Convert empty strings to null for optional fields
+      const optionalFields = ['bio', 'address', 'city', 'state', 'pincode', 'experience', 'education', 'linkedin_url', 'github_url', 'portfolio_url', 'phone', 'gender'];
       optionalFields.forEach(field => {
-        if (cleanProfile[field] === '') cleanProfile[field] = null;
+        if (backendProfile[field] === '' || backendProfile[field] === undefined) {
+          backendProfile[field] = null;
+        }
       });
       
-      if (!Array.isArray(cleanProfile.skills)) cleanProfile.skills = [];
-      
       // Validate social links format
-      const socialFields = ['linkedin', 'github', 'portfolio'];
+      const socialFields = ['linkedin_url', 'github_url', 'portfolio_url'];
       socialFields.forEach(field => {
-        if (cleanProfile[field] && cleanProfile[field] !== null) {
-          if (!cleanProfile[field].startsWith('http://') && !cleanProfile[field].startsWith('https://')) {
-            cleanProfile[field] = `https://${cleanProfile[field]}`;
+        if (backendProfile[field] && backendProfile[field] !== null) {
+          if (!backendProfile[field].startsWith('http://') && !backendProfile[field].startsWith('https://')) {
+            backendProfile[field] = `https://${backendProfile[field]}`;
           }
         }
       });
       
-      console.log('Updating profile with data:', cleanProfile);
+      // Remove any undefined or empty required fields
+      Object.keys(backendProfile).forEach(key => {
+        if (backendProfile[key] === undefined) {
+          delete backendProfile[key];
+        }
+      });
+      
+      console.log('Updating profile with data:', backendProfile);
       console.log('Environment:', import.meta.env.MODE);
       console.log('VITE_API_BASE_URL from env:', import.meta.env.VITE_API_BASE_URL);
       
@@ -162,7 +189,7 @@ function Profile() {
       const profileUrl = `${apiUrl}/api/auth/profile`;
       console.log('Using API URL:', profileUrl);
       
-      const response = await axios.put(profileUrl, cleanProfile, {
+      const response = await axios.put(profileUrl, backendProfile, {
         headers: { 
           Authorization: `Bearer ${token}`,
           'Content-Type': 'application/json'
