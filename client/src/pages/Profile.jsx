@@ -111,6 +111,15 @@ function Profile() {
     setSaving(true);
     try {
       const token = localStorage.getItem('token');
+      if (!token) {
+        throw new Error('No authentication token found. Please log in again.');
+      }
+      
+      // Validate required fields
+      if (!profile.firstName || !profile.lastName || !profile.email) {
+        throw new Error('First name, last name, and email are required fields.');
+      }
+      
       const cleanProfile = { ...profile };
       
       const optionalFields = ['bio', 'address', 'city', 'state', 'pincode', 'experience', 'education', 'linkedin', 'github', 'portfolio'];
@@ -121,9 +130,17 @@ function Profile() {
       if (!Array.isArray(cleanProfile.skills)) cleanProfile.skills = [];
       if (cleanProfile.phone) cleanProfile.phone = cleanProfile.phone.trim();
       
-      await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/auth/profile`, cleanProfile, {
-        headers: { Authorization: `Bearer ${token}` }
+      console.log('Updating profile with data:', cleanProfile);
+      console.log('API URL:', `${import.meta.env.VITE_API_BASE_URL}/api/auth/profile`);
+      
+      const response = await axios.put(`${import.meta.env.VITE_API_BASE_URL}/api/auth/profile`, cleanProfile, {
+        headers: { 
+          Authorization: `Bearer ${token}`,
+          'Content-Type': 'application/json'
+        }
       });
+      
+      console.log('Profile update response:', response.data);
       
       const user = JSON.parse(localStorage.getItem('user'));
       user.name = `${profile.firstName} ${profile.lastName}`;
@@ -135,8 +152,39 @@ function Profile() {
       setEditingSection(null);
     } catch (error) {
       console.error('Profile update error:', error);
+      
+      // More detailed error handling
+      let errorMessage = 'Error updating profile';
+      if (error.response) {
+        // Server responded with error status
+        console.error('Server error response:', error.response.data);
+        if (error.response.data && error.response.data.message) {
+          errorMessage = error.response.data.message;
+        } else if (error.response.data && error.response.data.errors) {
+          // Handle validation errors
+          const errors = error.response.data.errors;
+          const errorMessages = [];
+          Object.keys(errors).forEach(field => {
+            if (Array.isArray(errors[field])) {
+              errorMessages.push(...errors[field]);
+            } else {
+              errorMessages.push(errors[field]);
+            }
+          });
+          errorMessage = errorMessages.join('. ');
+        }
+      } else if (error.request) {
+        // Network error
+        console.error('Network error:', error.request);
+        errorMessage = 'Network error. Please check your connection and try again.';
+      } else {
+        // Other error
+        console.error('Error:', error.message);
+        errorMessage = error.message || 'An unexpected error occurred';
+      }
+      
       if (window.showPopup) {
-        window.showPopup('Error updating profile', 'error');
+        window.showPopup(errorMessage, 'error');
       }
     } finally {
       setSaving(false);
