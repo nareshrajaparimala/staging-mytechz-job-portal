@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation, useNavigate } from 'react-router-dom';
 import ProfileDropdown from './ProfileDropdown';
+import logo from '../assets/Mytechz.png';
 import './Navbar.css';
 
 function Navbar() {
@@ -12,6 +13,15 @@ function Navbar() {
   const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [userInfo, setUserInfo] = useState(null);
+  const [scrolled, setScrolled] = useState(false);
+
+  useEffect(() => {
+    const handleScroll = () => {
+      setScrolled(window.scrollY > 20);
+    };
+    window.addEventListener('scroll', handleScroll);
+    return () => window.removeEventListener('scroll', handleScroll);
+  }, []);
 
   useEffect(() => {
     const checkAuthStatus = () => {
@@ -54,101 +64,102 @@ function Navbar() {
   };
 
   return (
-    <nav className="navbar">
-      <div className="navbar-container">
-        {/* Logo */}
-        <Link to="/" className="navbar-logo">
-          <img src="../assets/logo2.png" alt="MytechZ Logo" className="logo-img" />
-        </Link>
+    <div className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
+      <nav className="navbar">
+        <div className="navbar-container">
+          {/* Logo */}
+          <Link to="/" className="navbar-logo">
+            <img src={logo} alt="MytechZ Logo" className="logo-img" />
+          </Link>
 
-        {/* Desktop Menu */}
-        <ul className="navbar-menu">
-          <li className={location.pathname === '/' ? 'active' : ''}>
-            <Link to="/">Home</Link>
-          </li>
+          {/* Desktop Menu */}
+          <ul className="navbar-menu">
+            <li className={location.pathname === '/' ? 'active' : ''}>
+              <Link to="/">Home</Link>
+            </li>
 
-          {isLoggedIn && userInfo?.role === 'recruiter' ? (
-            <>
-              <li className={location.pathname === '/recruiter/post-job' ? 'active' : ''}>
-                <Link to="/recruiter/post-job">Job Post</Link>
-              </li>
-              <li className={location.pathname === '/recruiter/resume-database' ? 'active' : ''}>
-                <Link to="/recruiter/resume-database">Resume Database</Link>
-              </li>
-              <li className={location.pathname === '/recruiter/post-internship' ? 'active' : ''}>
-                <Link to="/recruiter/post-internship">Internship Post</Link>
-              </li>
-              <li className={location.pathname === '/recruiter/reports' ? 'active' : ''}>
-                <Link to="/recruiter/reports">Get Report</Link>
-              </li>
-            </>
-          ) : (
-            <>
-              {/* Jobs Dropdown */}
-              <li 
-                className={`dropdown ${location.pathname.startsWith('/jobs') ? 'active' : ''}`}
-                onMouseEnter={() => setJobsDropdownOpen(true)}
-                onMouseLeave={() => setJobsDropdownOpen(false)}
-              >
-                <button className="dropdown-trigger">
-                  Jobs <i className="ri-arrow-down-s-line"></i>
-                </button>
-                {jobsDropdownOpen && (
-                  <ul className="dropdown-menu">
-                    <li><Link to="/jobs/private">Private Jobs</Link></li>
-                    <li><Link to="/jobs/government">Government Jobs</Link></li>
-                    <li><Link to="/jobs/internships">Internships</Link></li>
-                  </ul>
-                )}
-              </li>
+            {isLoggedIn && userInfo?.role === 'recruiter' ? (
+              <>
+                <li className={location.pathname === '/recruiter/post-job' ? 'active' : ''}>
+                  <Link to="/recruiter/post-job">Job Post</Link>
+                </li>
+                <li className={location.pathname === '/recruiter/resume-database' ? 'active' : ''}>
+                  <Link to="/recruiter/resume-database">Resume Database</Link>
+                </li>
+                <li className={location.pathname === '/recruiter/post-internship' ? 'active' : ''}>
+                  <Link to="/recruiter/post-internship">Internship Post</Link>
+                </li>
+                <li className={location.pathname === '/recruiter/reports' ? 'active' : ''}>
+                  <Link to="/recruiter/reports">Get Report</Link>
+                </li>
+              </>
+            ) : (
+              <>
+                {/* Jobs Dropdown */}
+                <li 
+                  className={`dropdown ${location.pathname.startsWith('/jobs') ? 'active' : ''}`}
+                  onMouseEnter={() => setJobsDropdownOpen(true)}
+                  onMouseLeave={() => setJobsDropdownOpen(false)}
+                >
+                  <button className="dropdown-trigger">
+                    Jobs <i className="ri-arrow-down-s-line"></i>
+                  </button>
+                  {jobsDropdownOpen && (
+                    <ul className="dropdown-menu">
+                      <li><Link to="/jobs/private">Private Jobs</Link></li>
+                      <li><Link to="/jobs/government">Government Jobs</Link></li>
+                      <li><Link to="/jobs/internships">Internships</Link></li>
+                    </ul>
+                  )}
+                </li>
 
-              {/* Resources Dropdown */}
-              <li 
-                className={`dropdown ${location.pathname.startsWith('/webinars') || location.pathname.startsWith('/interview-prep') || location.pathname.startsWith('/career-guidance') ? 'active' : ''}`}
-                onMouseEnter={() => setResourcesDropdownOpen(true)}
-                onMouseLeave={() => setResourcesDropdownOpen(false)}
-              >
-                <button className="dropdown-trigger">
-                  Resources <i className="ri-arrow-down-s-line"></i>
-                </button>
-                {resourcesDropdownOpen && (
-                  <ul className="dropdown-menu">
-                    <li><Link to="/webinars">Webinars</Link></li>
-                    <li><Link to="/interview-prep">Interview Prep</Link></li>
-                    <li><Link to="/career-guidance">Career Guidance</Link></li>
-                  </ul>
-                )}
-              </li>
+                {/* Resources Dropdown */}
+                <li 
+                  className={`dropdown ${location.pathname.startsWith('/webinars') || location.pathname.startsWith('/interview-prep') || location.pathname.startsWith('/career-guidance') ? 'active' : ''}`}
+                  onMouseEnter={() => setResourcesDropdownOpen(true)}
+                  onMouseLeave={() => setResourcesDropdownOpen(false)}
+                >
+                  <button className="dropdown-trigger">
+                    Resources <i className="ri-arrow-down-s-line"></i>
+                  </button>
+                  {resourcesDropdownOpen && (
+                    <ul className="dropdown-menu">
+                      <li><Link to="/webinars">Webinars</Link></li>
+                      <li><Link to="/interview-prep">Interview Prep</Link></li>
+                      <li><Link to="/career-guidance">Career Guidance</Link></li>
+                    </ul>
+                  )}
+                </li>
 
-              <li className={location.pathname === '/documents' ? 'active' : ''}>
-                <Link to="/documents">Resume</Link>
-              </li>
-              <li className={location.pathname.startsWith('/admissions') ? 'active' : ''}>
-                <Link to="/admissions">Admissions</Link>
-              </li>
-            </>
-          )}
-        </ul>
+                <li className={location.pathname === '/documents' ? 'active' : ''}>
+                  <Link to="/documents">Resume</Link>
+                </li>
+                <li className={location.pathname.startsWith('/admissions') ? 'active' : ''}>
+                  <Link to="/admissions">Admissions</Link>
+                </li>
+              </>
+            )}
+          </ul>
 
-        {/* Profile Icon */}
-        <div className="navbar-profile">
-          {isLoggedIn ? (
-            <ProfileDropdown userInfo={userInfo} onLogout={handleLogout} />
-          ) : (
-            <Link to="/login" className="login-icon">
-              <i className="ri-user-line"></i>
-            </Link>
-          )}
+          {/* Profile Icon / Login Button */}
+          <div className="navbar-auth">
+            {isLoggedIn ? (
+              <ProfileDropdown userInfo={userInfo} onLogout={handleLogout} />
+            ) : (
+              <Link to="/login" className="login-button">
+                Login
+              </Link>
+            )}
+          </div>
+
+          {/* Mobile Menu Toggle */}
+          <button 
+            className="mobile-menu-toggle"
+            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          >
+            <i className="ri-menu-line"></i>
+          </button>
         </div>
-
-        {/* Mobile Menu Toggle */}
-        <button 
-          className="mobile-menu-toggle"
-          onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
-        >
-          <i className="ri-menu-line"></i>
-        </button>
-      </div>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
@@ -196,7 +207,8 @@ function Navbar() {
           )}
         </div>
       )}
-    </nav>
+      </nav>
+    </div>
   );
 }
 
