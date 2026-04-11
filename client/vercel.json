@@ -1,8 +1,10 @@
 {
-  "rewrites": [
-    {
-      "source": "/(.*)",
-      "destination": "/index.html"
-    }
-  ]
+  "framework": "nextjs",
+  "buildCommand": "npm run build",
+  "outputDirectory": ".next",
+  "installCommand": "npm install",
+  "env": {
+    "NEXT_PUBLIC_DJANGO_API_URL": "http://localhost:5010",
+    "BLOCK_DISPOSABLE_EMAILS": "true"
+  }
 }

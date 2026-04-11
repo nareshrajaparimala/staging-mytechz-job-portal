@@ -1,211 +1,206 @@
-import React, { useState, useEffect } from 'react';
-import { Link, useLocation, useNavigate } from 'react-router-dom';
-import ProfileDropdown from './ProfileDropdown';
-import logo from '../assets/Mytechz.png';
-import './Navbar.css';
+'use client'
 
-function Navbar() {
-  const location = useLocation();
-  const navigate = useNavigate();
+import { useState, useEffect } from 'react'
+import Link from 'next/link'
+import { useRouter } from 'next/navigation'
+import { createClient } from '@/lib/supabase-browser'
+import Button from '@/components/ui/Button'
 
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-  const [jobsDropdownOpen, setJobsDropdownOpen] = useState(false);
-  const [resourcesDropdownOpen, setResourcesDropdownOpen] = useState(false);
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
-  const [userInfo, setUserInfo] = useState(null);
-  const [scrolled, setScrolled] = useState(false);
+export default function Navbar() {
+  const [isOpen, setIsOpen] = useState(false)
+  const [scrolled, setScrolled] = useState(false)
+  const [user, setUser] = useState(null)
+  const router = useRouter()
+  const supabase = createClient()
 
   useEffect(() => {
-    const handleScroll = () => {
-      setScrolled(window.scrollY > 20);
-    };
-    window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
-  }, []);
+    const handleScroll = () => setScrolled(window.scrollY > 20)
+    window.addEventListener('scroll', handleScroll)
+    return () => window.removeEventListener('scroll', handleScroll)
+  }, [])
 
   useEffect(() => {
-    const checkAuthStatus = () => {
-      const token = localStorage.getItem('token');
-      const user = localStorage.getItem('user');
-      setIsLoggedIn(!!token);
-      if (user) {
-        try {
-          setUserInfo(JSON.parse(user));
-        } catch (err) {
-          console.error('Error parsing user data', err);
-          setUserInfo(null);
-        }
-      } else {
-        setUserInfo(null);
-      }
-    };
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUser(user)
+    })
 
-    checkAuthStatus();
-    window.addEventListener('storage', checkAuthStatus);
-    window.addEventListener('authChange', checkAuthStatus);
+    const {
+      data: { subscription },
+    } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUser(session?.user ?? null)
+    })
 
-    return () => {
-      window.removeEventListener('storage', checkAuthStatus);
-      window.removeEventListener('authChange', checkAuthStatus);
-    };
-  }, []);
+    return () => subscription.unsubscribe()
+  }, [])
 
-  useEffect(() => {
-    setMobileMenuOpen(false);
-  }, [location.pathname]);
-
-  const handleLogout = () => {
-    localStorage.removeItem('token');
-    localStorage.removeItem('user');
-    setIsLoggedIn(false);
-    setUserInfo(null);
-    window.dispatchEvent(new Event('authChange'));
-    navigate('/login');
-  };
+  const handleSignOut = async () => {
+    await supabase.auth.signOut()
+    setUser(null)
+    router.push('/')
+    router.refresh()
+  }
 
   return (
-    <div className={`navbar-wrapper ${scrolled ? 'scrolled' : ''}`}>
-      <nav className="navbar">
-        <div className="navbar-container">
+    <nav
+      className={`fixed top-0 left-0 right-0 z-50 transition-all duration-300 ${
+        scrolled
+          ? 'bg-white/80 backdrop-blur-lg shadow-md border-b border-gray-200/50'
+          : 'bg-transparent'
+      }`}
+    >
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <div className="flex items-center justify-between h-16">
           {/* Logo */}
-          <Link to="/" className="navbar-logo">
-            <img src={logo} alt="MytechZ Logo" className="logo-img" />
+          <Link href="/" className="flex items-center gap-2">
+            <div className="w-9 h-9 bg-blue-600 rounded-lg flex items-center justify-center">
+              <span className="text-white font-bold text-lg">M</span>
+            </div>
+            <span className="text-xl font-bold text-gray-900">
+              My<span className="text-blue-600">TechZ</span>
+            </span>
           </Link>
 
-          {/* Desktop Menu */}
-          <ul className="navbar-menu">
-            <li className={location.pathname === '/' ? 'active' : ''}>
-              <Link to="/">Home</Link>
-            </li>
+          {/* Desktop Nav Links */}
+          <div className="hidden md:flex items-center gap-8">
+            <Link
+              href="/"
+              className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+            >
+              Home
+            </Link>
+            <Link
+              href="#jobs"
+              className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+            >
+              Jobs
+            </Link>
+            <Link
+              href="#categories"
+              className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+            >
+              Categories
+            </Link>
+            <Link
+              href="#about"
+              className="text-gray-700 hover:text-blue-600 font-medium transition-colors"
+            >
+              About
+            </Link>
+          </div>
 
-            {isLoggedIn && userInfo?.role === 'recruiter' ? (
-              <>
-                <li className={location.pathname === '/recruiter/post-job' ? 'active' : ''}>
-                  <Link to="/recruiter/post-job">Job Post</Link>
-                </li>
-                <li className={location.pathname === '/recruiter/resume-database' ? 'active' : ''}>
-                  <Link to="/recruiter/resume-database">Resume Database</Link>
-                </li>
-                <li className={location.pathname === '/recruiter/post-internship' ? 'active' : ''}>
-                  <Link to="/recruiter/post-internship">Internship Post</Link>
-                </li>
-                <li className={location.pathname === '/recruiter/reports' ? 'active' : ''}>
-                  <Link to="/recruiter/reports">Get Report</Link>
-                </li>
-              </>
+          {/* Desktop Auth */}
+          <div className="hidden md:flex items-center gap-3">
+            {user ? (
+              <div className="flex items-center gap-3">
+                <span className="text-sm text-gray-600 truncate max-w-[180px]">
+                  {user.email}
+                </span>
+                <Button variant="secondary" size="sm" onClick={handleSignOut}>
+                  Sign Out
+                </Button>
+              </div>
             ) : (
-              <>
-                {/* Jobs Dropdown */}
-                <li 
-                  className={`dropdown ${location.pathname.startsWith('/jobs') ? 'active' : ''}`}
-                  onMouseEnter={() => setJobsDropdownOpen(true)}
-                  onMouseLeave={() => setJobsDropdownOpen(false)}
-                >
-                  <button className="dropdown-trigger">
-                    Jobs <i className="ri-arrow-down-s-line"></i>
-                  </button>
-                  <ul className={`dropdown-menu ${jobsDropdownOpen ? 'active' : ''}`}>
-                    <li><Link to="/jobs/private">Private Jobs</Link></li>
-                    <li><Link to="/jobs/government">Government Jobs</Link></li>
-                    <li><Link to="/jobs/internships">Internships</Link></li>
-                  </ul>
-                </li>
-
-                {/* Resources Dropdown */}
-                <li 
-                  className={`dropdown ${location.pathname.startsWith('/webinars') || location.pathname.startsWith('/interview-prep') || location.pathname.startsWith('/career-guidance') ? 'active' : ''}`}
-                  onMouseEnter={() => setResourcesDropdownOpen(true)}
-                  onMouseLeave={() => setResourcesDropdownOpen(false)}
-                >
-                  <button className="dropdown-trigger">
-                    Resources <i className="ri-arrow-down-s-line"></i>
-                  </button>
-                  <ul className={`dropdown-menu ${resourcesDropdownOpen ? 'active' : ''}`}>
-                    <li><Link to="/webinars">Webinars</Link></li>
-                    <li><Link to="/interview-prep">Interview Prep</Link></li>
-                    <li><Link to="/career-guidance">Career Guidance</Link></li>
-                  </ul>
-                </li>
-
-                <li className={location.pathname === '/documents' ? 'active' : ''}>
-                  <Link to="/documents">Resume</Link>
-                </li>
-                <li className={location.pathname.startsWith('/admissions') ? 'active' : ''}>
-                  <Link to="/admissions">Admissions</Link>
-                </li>
-              </>
-            )}
-          </ul>
-
-          {/* Profile Icon / Login Button */}
-          <div className="navbar-auth">
-            {isLoggedIn ? (
-              <ProfileDropdown userInfo={userInfo} onLogout={handleLogout} />
-            ) : (
-              <Link to="/login" className="login-button">
-                Login
-              </Link>
+              <div className="flex items-center gap-2">
+                <Link href="/login">
+                  <Button variant="secondary" size="sm">
+                    Log In
+                  </Button>
+                </Link>
+                <Link href="/login">
+                  <Button size="sm">Get Started</Button>
+                </Link>
+              </div>
             )}
           </div>
 
-          {/* Mobile Menu Toggle */}
-          <button 
-            className="mobile-menu-toggle"
-            onClick={() => setMobileMenuOpen(!mobileMenuOpen)}
+          {/* Mobile Hamburger */}
+          <button
+            className="md:hidden p-2 rounded-lg hover:bg-gray-100 transition-colors"
+            onClick={() => setIsOpen(!isOpen)}
+            aria-label="Toggle menu"
           >
-            <i className="ri-menu-line"></i>
+            <div className="w-5 h-5 flex flex-col justify-center gap-1">
+              <span
+                className={`block h-0.5 w-5 bg-gray-700 transition-all duration-300 ${
+                  isOpen ? 'rotate-45 translate-y-1.5' : ''
+                }`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-gray-700 transition-all duration-300 ${
+                  isOpen ? 'opacity-0' : ''
+                }`}
+              />
+              <span
+                className={`block h-0.5 w-5 bg-gray-700 transition-all duration-300 ${
+                  isOpen ? '-rotate-45 -translate-y-1.5' : ''
+                }`}
+              />
+            </div>
           </button>
         </div>
+      </div>
 
       {/* Mobile Menu */}
-      {mobileMenuOpen && (
-        <div className="mobile-menu">
-          <Link to="/" onClick={() => setMobileMenuOpen(false)}>Home</Link>
-          
-          {isLoggedIn && userInfo?.role === 'recruiter' ? (
-            <>
-              <Link to="/recruiter/post-job" onClick={() => setMobileMenuOpen(false)}>Job Post</Link>
-              <Link to="/recruiter/resume-database" onClick={() => setMobileMenuOpen(false)}>Resume Database</Link>
-              <Link to="/recruiter/post-internship" onClick={() => setMobileMenuOpen(false)}>Internship Post</Link>
-              <Link to="/recruiter/reports" onClick={() => setMobileMenuOpen(false)}>Get Report</Link>
-            </>
-          ) : (
-            <>
-              <div className="mobile-dropdown">
-                <button onClick={() => setJobsDropdownOpen(!jobsDropdownOpen)}>
-                  Jobs <i className={`ri-arrow-${jobsDropdownOpen ? 'up' : 'down'}-s-line`}></i>
-                </button>
-                {jobsDropdownOpen && (
-                  <div className="mobile-submenu">
-                    <Link to="/jobs/private" onClick={() => setMobileMenuOpen(false)}>Private Jobs</Link>
-                    <Link to="/jobs/government" onClick={() => setMobileMenuOpen(false)}>Government Jobs</Link>
-                    <Link to="/jobs/internships" onClick={() => setMobileMenuOpen(false)}>Internships</Link>
-                  </div>
-                )}
+      <div
+        className={`md:hidden transition-all duration-300 overflow-hidden ${
+          isOpen ? 'max-h-96 opacity-100' : 'max-h-0 opacity-0'
+        }`}
+      >
+        <div className="bg-white/95 backdrop-blur-lg border-t border-gray-200/50 px-4 py-4 space-y-3">
+          <Link
+            href="/"
+            className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
+            onClick={() => setIsOpen(false)}
+          >
+            Home
+          </Link>
+          <Link
+            href="#jobs"
+            className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
+            onClick={() => setIsOpen(false)}
+          >
+            Jobs
+          </Link>
+          <Link
+            href="#categories"
+            className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
+            onClick={() => setIsOpen(false)}
+          >
+            Categories
+          </Link>
+          <Link
+            href="#about"
+            className="block py-2 text-gray-700 hover:text-blue-600 font-medium"
+            onClick={() => setIsOpen(false)}
+          >
+            About
+          </Link>
+          <div className="pt-3 border-t border-gray-200">
+            {user ? (
+              <div className="space-y-2">
+                <p className="text-sm text-gray-600 truncate">{user.email}</p>
+                <Button
+                  variant="secondary"
+                  size="sm"
+                  className="w-full"
+                  onClick={() => {
+                    handleSignOut()
+                    setIsOpen(false)
+                  }}
+                >
+                  Sign Out
+                </Button>
               </div>
-
-              <div className="mobile-dropdown">
-                <button onClick={() => setResourcesDropdownOpen(!resourcesDropdownOpen)}>
-                  Resources <i className={`ri-arrow-${resourcesDropdownOpen ? 'up' : 'down'}-s-line`}></i>
-                </button>
-                {resourcesDropdownOpen && (
-                  <div className="mobile-submenu">
-                    <Link to="/webinars" onClick={() => setMobileMenuOpen(false)}>Webinars</Link>
-                    <Link to="/interview-prep" onClick={() => setMobileMenuOpen(false)}>Interview Prep</Link>
-                    <Link to="/career-guidance" onClick={() => setMobileMenuOpen(false)}>Career Guidance</Link>
-                  </div>
-                )}
-              </div>
-
-              <Link to="/documents" onClick={() => setMobileMenuOpen(false)}>Resume</Link>
-              <Link to="/admissions" onClick={() => setMobileMenuOpen(false)}>Admissions</Link>
-            </>
-          )}
+            ) : (
+              <Link href="/login" onClick={() => setIsOpen(false)}>
+                <Button className="w-full" size="sm">
+                  Log In
+                </Button>
+              </Link>
+            )}
+          </div>
         </div>
-      )}
-      </nav>
-    </div>
-  );
+      </div>
+    </nav>
+  )
 }
-
-export default Navbar;

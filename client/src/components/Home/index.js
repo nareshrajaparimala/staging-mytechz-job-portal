@@ -1,9 +1,0 @@
-// Export all Home components for easy importing
-export { default as SectionTitle } from './SectionTitle';
-export { default as StatsCard } from './StatsCard';
-export { default as SearchBar } from './SearchBar';
-export { default as TestimonialCard } from './TestimonialCard';
-export { default as FeatureCard } from './FeatureCard';
-export { default as SkillCard } from './SkillCard';
-export { default as ResourceCard } from './ResourceCard';
-export { default as CTAButton } from './CTAButton';
